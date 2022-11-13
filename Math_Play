@@ -1,0 +1,48 @@
+import java.util.Scanner;
+public class Mathchallenge {
+/*
+ * To make it more reactive we can do a random question by add more.
+ * 	import java.util.Random;
+ * 	public static final int RNG_RANGE = 100; // this one make a random from 0 to 99 (not include 100);
+ */
+	public static void main(String[] args) {
+		Scanner keyboard = new Scanner(System.in);
+		System.out.println("Are you ready for a math challenge?\nEnter \"true\" or \"false\"");
+		// Random r = new Random():
+		boolean play = keyboard.nextBoolean();
+		if (play)
+/*
+ * Here can use a different way by String
+ * 		String play = keyboard.nextLine();
+ * 		if (play.equalsIgnoreCase("Yes)));
+ */
+		{
+			System.out.println("LET THE CHALLENGE BEGIN!");
+			
+		}
+		else
+		{
+			System.out.println("Aw...");
+			System.exit(0); //Immediately stops the program
+		}
+		
+		int num1 = 2; // int num1 = r.nextInt(RNG.RANGE);
+		int num2 = 3; // int num2 = r.nextInt(RNG.RANGE);
+		int result = num1 + num2; //int result = (int)MATH.pow(num1,num2); 
+		// using casted here because RH is double has 8 bytes can't store in int 4 bytes;
+		
+		System.out.println("What is "+num1+" + " +num2+"?"); // change + to ^ for power of number; 
+		int answer = keyboard.nextInt();
+		
+		if(answer == result)
+		{
+			System.out.println("You Win!!");
+		}
+		else
+		{
+			System.out.println("Sr..Nope");
+		}
+		keyboard.close();
+	}
+
+}
