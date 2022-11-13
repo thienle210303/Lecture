@@ -1,0 +1,215 @@
+public class DoubleDoubleLL {
+	private class ListNode
+	{
+		double data;
+		ListNode linkB;
+		ListNode linkF;
+		public ListNode(double aData, ListNode Blink, ListNode Flink)
+		{
+			data = aData;
+			linkB = Blink;
+			linkF = Flink;
+		}
+	}
+	private ListNode head; //3 nodes
+	private ListNode current;
+	private ListNode previous;
+	public DoubleDoubleLL()
+	{
+		head = current = previous = null;
+	}
+	public void gotoNext() //goto the next node
+	{
+		if(current == null)
+			return;
+		previous = current;
+		current = current.linkF;
+	}
+	public void gotoPrev() // go back the previous node
+	{
+		if(current == null)
+			return;
+		current = previous;
+		current = current.linkB;
+	}
+	public void reset() // reset the node
+	{
+		current = head;
+		previous = null;
+	}
+	public void gotoEnd() // go to the end of list
+	{
+		reset();
+		while(current.linkF != null)
+		{
+			gotoNext();
+		}
+	}
+	public boolean hasMore() //if list have more or not
+	{
+		return current != null;
+	}
+	public double getCurrent()
+	{
+		if(current != null)
+			return current.data;
+		return 0;
+	}
+	public void setCurrent(double aData)
+	{
+		if( current != null)
+			current.data = aData;
+	}
+	public void add(double aData) //add at the end of LL
+	{
+		ListNode newNode = new ListNode(aData, null, null);
+		if(head == null)
+		{
+			head = current = newNode;
+			previous = null;
+			return;
+		}
+		ListNode temp = head;
+		while(temp.linkF != null)
+			temp = temp.linkF;
+		temp.linkF = newNode;
+		newNode.linkB = temp;
+	}
+	public void addAfterCurrent(double aData) //add after the current node
+	{
+		if(current == null)
+		{
+			return;
+		}
+		ListNode newNode = new ListNode(aData, null, null);
+		newNode.linkF = current.linkF; //Front
+		newNode.linkF.linkB = newNode;
+		
+		current.linkF = newNode; //Back
+		newNode.linkB = current;
+		
+	}
+	public void removeCurrent() //remove the current node
+	{
+		if(current == head)
+		{
+			head = head.linkF;
+			current = head;
+			
+		}
+		else
+		{
+			previous.linkF = current.linkF;
+			current.linkB = previous.linkF;
+			current = current.linkF;
+		}
+	}
+	public void remove(double aData) //remove any node
+	{
+		if(current == null)
+			return;
+		ListNode temp = head;
+		reset();
+		while(temp != null)
+		{
+			gotoNext();
+			if(temp.data == aData)
+			{
+				previous.linkF = current.linkF;
+				current.linkB = previous.linkF;
+				current = current.linkF;
+//				current.linkB.linkF = current.linkF;
+//				current.linkF.linkB = current.linkB;
+			}
+		}
+		current = head;
+	}
+	public void print() //print out data
+	{
+		ListNode temp = head;
+		while(temp != null)
+		{
+			System.out.println(temp.data);
+			temp = temp.linkF;
+		}
+	}
+	public boolean contains(double data) //check if have data
+	{
+		ListNode temp = head;
+		while(temp != null)
+		{
+			if(temp.data == data)
+			{
+				return true;
+			}
+			temp = temp.linkF;
+		}
+		return false;
+	}
+}
+
+public class DoubleLinkedListTester {
+	public static final double[] TEST_VALS_1 = {0.0,1.0,2.0,3.0,4.0,5.0,6.0,7.0,8.0,9.0};
+	public static final double[] TEST_VALS_2 = {1.0,3.0,4.0,5.0,6.0,7.0,8.0};
+	public static final double[] TEST_VALS_3 = {1.0,3.0,-4.0,5.0,-6.0,7.0,-8.0};
+	
+	public static final String DEC = "------------------------------------------------------\n";
+	public static void main(String[] args) {
+		printDecorated("Double Double Linked List Tester");
+		DoubleDoubleLL ddList = new DoubleDoubleLL();
+
+		System.out.println("SUCCESS: "+insertAndContainsTest(ddList)+"\n");
+		System.out.println("SUCCESS: "+deleteTest(ddList)+"\n");
+		System.out.println("SUCCESS: "+modifyingValuesTest(ddList)+"\n");
+		
+		printDecorated("Printing the list");
+		ddList.print();
+		
+		ddList.gotoEnd();
+		System.out.println("Print last element: "+ddList.getCurrent());
+	}
+	
+	public static boolean insertAndContainsTest(DoubleDoubleLL ddList)
+	{
+		printDecorated("Inserting and Contains Test");
+		for(int i=0;i<TEST_VALS_1.length;i++)
+			ddList.add(TEST_VALS_1[i]);
+		return valuesMatch(ddList,TEST_VALS_1);
+	}
+	public static boolean deleteTest(DoubleDoubleLL ddList)
+	{
+		printDecorated("Removing Test\nRemoving first item, third item, and last item");
+		ddList.reset();
+		ddList.removeCurrent();
+		
+		ddList.gotoNext();
+		ddList.removeCurrent();
+
+		ddList.gotoEnd();
+		ddList.removeCurrent();
+		return valuesMatch(ddList,TEST_VALS_2);
+	}
+	public static boolean modifyingValuesTest(DoubleDoubleLL ddList)
+	{
+		printDecorated("Modified Values Test\nChanging all even values to negative values");
+		ddList.reset();
+		while(ddList.hasMore())
+		{
+			if(ddList.getCurrent() % 2 == 0)
+				ddList.setCurrent(-ddList.getCurrent());
+			ddList.gotoNext();
+		}
+		return valuesMatch(ddList,TEST_VALS_3);
+	}
+	public static boolean valuesMatch(DoubleDoubleLL ddList, double[] testVals)
+	{
+		for(int i=0;i<testVals.length;i++)
+			if(!ddList.contains(testVals[i]))
+				return false;
+		return true;
+	}
+	public static void printDecorated(String str)
+	{
+		System.out.println(DEC+str+"\n"+DEC);
+	}
+}
