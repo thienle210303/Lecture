@@ -1,0 +1,81 @@
+import java.util.Scanner;
+public class adecision {
+	
+	public static final String BOX1 = "ET for the Atari"; //a string is constant can't change.
+	public static final String BOX2 = "Floppy Disk"; //capital the constant for ez known it a constant.
+	public static final String BOX3 = "Brand new cpu";
+	public static void main(String[] args) {
+		Scanner keyboard = new Scanner(System.in);
+		String Prize1 = "nothing";
+		String Prize2 = "nothing";
+		
+		System.out.println("Let's make a decision!\nContestant 1, will you choose \"box1\", \"box2\", or \"box3\"?");
+		
+		String answer = keyboard.nextLine();
+		
+		if(answer.equalsIgnoreCase("box1"))
+		{
+			Prize1 = BOX1;
+			System.out.println("Contestant 2, will you choose \"box2\" or \"box3\"?");
+			answer = keyboard.nextLine();
+			if (answer.equalsIgnoreCase("box2"))
+			{
+				Prize2 = BOX2;
+			}
+			else if(answer.equalsIgnoreCase("box3"))
+			{
+				Prize2 = BOX3;
+			}
+			else
+			{
+				System.out.println("That's nopt valid!! You get nothing!!!");
+				
+			}
+		}
+		else if(answer.equalsIgnoreCase("box2"))
+		{
+			Prize1 = BOX2;
+			System.out.println("Contestant 2, will you choose \"box1\" or \"box2\"?");
+			answer = keyboard.nextLine();
+			if(answer.equalsIgnoreCase("box1"))
+			{
+				Prize2 = BOX1;
+			}
+			else if(answer.equalsIgnoreCase("box3"))
+			{
+				Prize2 = BOX3;
+			}
+			else
+			{
+				System.out.println("That's not valid!!! You get nothing!!!");
+			}
+		}
+		else if(answer.equalsIgnoreCase("box3"))
+		{
+			Prize1 = BOX3;
+			System.out.println("Contestant 2, will you choose \"box1\" or \"box2\"?");
+			answer = keyboard.nextLine();
+			if(answer.equalsIgnoreCase("box1"))
+			{
+				Prize1 = BOX1;
+			}
+			else if(answer.equalsIgnoreCase("box2"))
+			{
+				Prize2 = BOX2;
+			}
+			else
+			{
+				System.out.println("That's not valid!!! You get nothing!!!");
+			}
+		}
+		else
+		{
+			System.out.println("That's not valid!! You both get nothing!!!");
+			System.exit(0);
+		}
+		System.out.println("Contestant 1 won: "+Prize1+"\nContestant 2 won: "+Prize2+"\nThank you for playing!");
+		
+	keyboard.close();
+	}
+
+}
