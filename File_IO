@@ -1,0 +1,144 @@
+import java.io.*;
+import java.util.Scanner;
+public class FileIOSolutions {
+
+	public static Scanner keyboard = new Scanner(System.in);
+	public static void main(String[] args) {
+			
+		System.out.println("Welcome to the File I/O Problem's Solutions!");
+		boolean quit = false;
+		while(!quit)			
+		{
+			printChoices();
+			int input = keyboard.nextInt();
+			keyboard.nextLine();//Useful fix-up
+			switch(input)
+			{
+			case 1:
+				test01();
+				break;
+			case 2:
+				test02();
+				break;
+			case 9:
+				quit = true;
+				break;
+				default:
+					System.out.println("Invalid Input");
+			}
+		}
+		System.out.println("Goodbye!");
+
+	}
+	public static void printChoices()
+	{
+		System.out.println("Enter 1. For Test 1\nEnter 2. For Test 2\nEnter 9. To Quit");
+	}
+	public static void test01()
+	{
+		System.out.println("\n-----------------------\nTest01\n-----------------------");
+		System.out.println("Testing method \"pastTense\" with the file \"ItIs.txt\" and outputting to \"ItWas.txt\"");
+		FileIOSolutions.pastTense("ItIs.txt", "ItWas.txt");
+	}
+	public static void test02()
+	{
+		System.out.println("\n-----------------------\nTest02\n-----------------------");
+		System.out.println("Testing method \"totalTubeVolume\" with the file \"./Tubes.txt\"");
+		double volume = FileIOSolutions.totalTubeVolume("./Tubes.txt");
+		System.out.println("The total combined volume is: "+volume+"\n");
+	}
+	
+
+	public static void pastTense(String a, String b)
+	{
+		String word = "";
+		String[] empty = new String[50]; //create empty array string that have a size of 50
+		int counter = 0;
+		try
+		{
+			Scanner fileScanner = new Scanner(new File(a));//read a file
+			while(fileScanner.hasNextLine())
+			{
+				word = "";
+				String fileLine = fileScanner.next();
+				String[] splitLine = fileLine.split(" ");
+				if(splitLine.length != 1)
+					continue;
+				for(int i=0;i<splitLine.length;i++)
+				{	
+					if(splitLine[i].equalsIgnoreCase("is"))
+						splitLine[i] = "was"; //change was to is
+					word += splitLine[i] + " ";//rewrite the single word into a sentence as str
+					counter ++;
+					empty[counter] = word;
+				}
+			}
+			fileScanner.close();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		try
+		{
+			PrintWriter filePrint = new PrintWriter(new FileOutputStream(new File(b)));
+			for(int i = 1; i<empty.length;i++)
+			{
+				if(empty[i] != null)
+				{
+					System.out.println(empty[i]);
+					filePrint.print(empty[i]);
+
+				}
+			}
+			filePrint.close();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}	
+	}
+	
+	public static double totalTubeVolume(String a)
+	{
+		double totalVolume = 0.0;
+		int totalId = 0;
+		
+		try
+		{
+			Scanner fileScanner = new Scanner(new File(a));
+			while(fileScanner.hasNextLine())
+			{
+				double volume = 0;
+				String fileLine = fileScanner.nextLine();
+				String[] splitLine = fileLine.split("\t");
+				if(splitLine.length != 3)
+					continue;
+			
+				double radius = Double.parseDouble(splitLine[1]);
+				double height = Double.parseDouble(splitLine[2]);
+//				for(int i = 0; i<splitLine.length;i++)
+//				{
+//					totalId ++;
+//					volume = (radius*radius)*Math.PI*height;
+//					totalVolume += volume;
+//					if (totalId > 100)
+//						break;
+//				}
+				totalId ++;
+				volume = (radius*radius)*Math.PI*height; //calculated the volume
+				totalVolume += volume;
+				if(totalId > 100)
+					break;
+			}
+			fileScanner.close();
+			
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		
+		return totalVolume; //return the volume
+	}
+}
