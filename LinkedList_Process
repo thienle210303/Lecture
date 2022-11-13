@@ -1,0 +1,217 @@
+public interface QueueI<T> {
+	public void enqueue(T aData);
+	public T dequeue();
+	public T peek();
+	public void print();
+}
+
+
+public class LLQueue<T> implements QueueI<T>{
+	private class ListNode //list node of the link list
+	{
+		T data;
+		ListNode link;
+		public ListNode(T aData, ListNode aLink)
+		{
+			data = aData;
+			link = aLink;
+		}
+	}
+	
+	private ListNode head;
+	private ListNode tail;
+	public LLQueue() { //set the default
+		head = tail = null;
+	}
+	public void enqueue(T aData) //add data into queue linkedlist
+	{
+		ListNode newNode = new ListNode(aData, null);
+		if(head == null)
+		{
+			head = tail = newNode;
+			return;
+		}
+		tail.link = newNode;
+		tail = tail.link;
+	}
+	public T dequeue() //remove from the queue link list and move to the next one
+	{
+		if(head == null)
+			return null;  
+		T ret = head.data;
+		head = head.link;
+		return ret;
+	}
+	public T peek() //first element of the queue
+	{
+		if(head == null)
+			return null;
+		return head.data;
+	}
+	public void print() //print out the queue data
+	{
+		for(ListNode temp = head; temp!= null; temp = temp.link)
+			System.out.println(temp.data);
+	}
+
+}
+
+
+public class Process {
+	private String name;
+	private double compleTime;
+	
+	public Process()
+	{
+		this.name = "none";
+		this.compleTime = 0.0;
+	}
+	public Process(String aN, double aT) 
+	{
+		setName(aN);
+		setCompletionTime(aT);
+	}
+	public String getName()
+	{
+		return this.name;
+	}
+	public double getCompletionTime()
+	{
+		return this.compleTime;
+	}
+	public void setName(String aN)
+	{
+		if(aN == null)
+			this.name = "none";
+		else
+			this.name = aN;
+	}
+	public void setCompletionTime(double aT)
+	{
+		if(aT <= 0)
+			this.compleTime = 0.0;
+		else
+			this.compleTime = aT;
+	}
+	public String toString()
+	{
+		return "Process Name: "+this.name+" Completion Time "+this.compleTime;
+	}
+}
+
+public class ProcessScheduler {
+	LLQueue<Process> Processes;
+	Process CurrentProcess;
+	public ProcessScheduler()
+	{
+		Processes = new LLQueue<Process>();
+		CurrentProcess = null;
+	}
+	public Process getCurrentProcess() //get the current process
+	{
+		return CurrentProcess;
+	}
+	public void addProcess(Process aP)
+	{
+		if(CurrentProcess == null)
+			CurrentProcess = aP;
+		Processes.enqueue(aP);
+	}
+	public void runNextProcess() //delete the current elem in queue and move to next one then set it to current process
+	{
+		CurrentProcess = Processes.dequeue();
+	}
+	public void cancelCurrentProcess() //same as run next process but different way of use
+	{
+		
+		CurrentProcess = Processes.peek();
+		Processes.dequeue();
+		// same way is CurrentProcess = Process.dequeue();
+	}
+	public void printProcessQueue() //print out
+	{
+		Processes.print();
+	}
+}
+
+import java.util.*;
+public class ProcessSchedulerSimulator {
+
+	public static final int MAX_SIM_TIME = 50;//Max cycle times
+	public static final double MAX_PROC_TIME = 15.0;
+	public static final int RAND_ADD_VAL = 3;//A value that adds a new process only when it's a multiple.
+	public static final int RAND_CANCEL_VAL = 23;//A value that ends the current process only it's a multiple.
+	public static Random rng = new Random(10);//Random number generator. Add a number into its parameter to fix its seed value
+	public static void main(String[] args) {
+		//Creating process scheduler
+		ProcessScheduler scheduler = new ProcessScheduler();
+		int currProcCount = 0;
+		Process currProcess;
+		printHeader("Welcome to the\nprocess scheduler\nsimulator");
+		System.out.println("\n");
+		for(int i=0;i<MAX_SIM_TIME;i++)
+		{
+			printHeader("Time Step "+i);
+			//Possibly add a new process
+			if(rng.nextInt()%RAND_ADD_VAL == 0)
+			{
+				addRandomProcess(scheduler,++currProcCount);
+			}
+			//Possibly remove a process
+			if(rng.nextInt()%RAND_CANCEL_VAL == 0)
+			{
+				printAction("Cancelling current Process");
+				scheduler.cancelCurrentProcess();
+			}
+			//Get status of the current process
+			currProcess = scheduler.getCurrentProcess();
+			if(currProcess == null)
+			{
+				printAction("No processes currently running");
+			}
+			else if(currProcess.getCompletionTime() > 0.0)
+			{
+				printAction("Current Process "+currProcess.toString());
+				currProcess.setCompletionTime(currProcess.getCompletionTime()-1.0);
+				printAction("Updating Completion Time "+currProcess.toString());
+			}
+			else
+			{
+				printAction("Current Process Complete");
+				scheduler.runNextProcess();
+				currProcess = scheduler.getCurrentProcess();
+				if(currProcess!=null)
+				{
+					printAction("New current process "+currProcess.toString());
+				}
+				else
+				{
+					printAction("No current process");
+				}
+			}
+			//Check status of the process queue
+			printAction("Current Process Queue");
+			scheduler.printProcessQueue();
+
+		}
+	}
+	public static void addRandomProcess(ProcessScheduler scheduler, int count)
+	{
+		String name = "Process"+(count);
+		double randTime = rng.nextDouble()*MAX_PROC_TIME;
+		Process p = new Process(name,randTime);
+		printAction("Adding a new Process " + p.toString());
+		scheduler.addProcess(p);
+	}
+	public static void printHeader(String data)
+	{
+		System.out.println("---------------------------\n"+data+"\n---------------------------");
+	}
+	public static void printAction(String data)
+	{
+		System.out.println("***"+data+"***");
+	}
+
+}
+
+
