@@ -1,0 +1,496 @@
+public class Game {
+	private String name;
+	private String system;
+	
+	//default constructor
+	public Game() 
+	{
+		this.name = "none";
+		this.system = "none";
+	}
+
+	public Game(String aN, String aS)  //param constructor
+	{
+		this.setName(aN);
+		this.setSystem(aS);
+	}
+	public String getName() 
+	{
+		return this.name;
+	}
+	public void setName(String aN) 
+	{
+		if(aN == null)
+			this.name = "none";
+		else 
+			this.name = aN;
+	}
+	public String getSystem() 
+	{
+		return this.system;
+	}
+	public void setSystem(String aS) 
+	{
+		if(aS == null)
+			this.system = "none";
+		else
+			this.system = aS;
+	}
+	
+	public String toString() 
+	{
+		return "Name: " +this.name+ "	System: "+this.system;
+	}
+	
+	public boolean equals(Game aG) 
+	{
+		//need to catch not null
+		return aG != null && this.name.equals(aG.getName())
+				&& this.system.equals(aG.getSystem());
+	}
+}
+
+public class GenLL <T>
+//T stand for every type
+{
+	private class ListNode
+	{
+		T data;
+		ListNode link;
+		public ListNode(T aData, ListNode aLink)
+		{
+			data = aData;
+			link = aLink; 
+		}
+	}
+	private ListNode head;
+	private ListNode current;
+	private ListNode previous;
+	public GenLL()
+	{
+		head = current = previous = null;
+	}
+	public T getCurrent()
+	{
+		if(current == null)
+			return null;
+		return current.data;
+	}
+	public void setCurrent(T aData)
+	{
+		if(aData == null || current == null)
+			return;
+		current.data = aData;
+	}
+	public void add(T aData) 
+	{
+		ListNode newNode = new ListNode(aData, null);
+		if(head == null)
+		{
+			head = current = newNode;
+			return;
+		}
+		ListNode temp = head;
+		while(temp.link != null)
+			temp = temp.link;
+		temp.link = newNode;
+	}
+	public void print()
+	{
+		ListNode temp = head;
+		while(temp != null)
+		{
+			System.out.println(temp.data);
+			temp = temp.link;
+		}
+	}
+	public void gotoNext()
+	{
+		if(current == null)
+			return;
+		previous = current;
+		current = current.link;
+	}
+	public void reset()
+	{
+		current = head;
+		previous = null;
+	}
+	public boolean hasMore()
+	{
+		return current != null;
+	}
+	public void removeCurrent()
+	{
+		if(current == head)
+		{
+			head = head.link;
+			current = head;
+		}
+		else
+		{
+			previous.link = current.link;
+			current = current.link;
+		}
+	}
+	public boolean contains(String aName) //check if have data
+	{
+		ListNode temp = head;
+		String t = temp.data.toString();
+		while(temp != null)
+		{
+			if(t.equalsIgnoreCase(aName))
+			{
+				return true;
+			}
+			temp = temp.link;
+		}
+		return false;
+	}
+}
+
+
+import java.io.*;
+import java.util.Scanner;
+public class GameLL {
+	public static final String STAR = "*";
+	public static final String DELIM = "\t";
+	public static final int BODY = 2;
+	public SearchLL list = new SearchLL();
+	private GenLL<Game> games; //store video game
+	public GameLL()
+	{
+		games = new GenLL<Game>();
+	}
+	public void printGames()
+	{
+		games.print();
+	}
+	public void addGame(Game aG)
+	{
+		games.add(aG);
+	}
+	public void removeGame(String aName)
+	{
+		games.reset();
+		while(games.hasMore())
+		{
+			if(games.getCurrent().getName().toLowerCase().contains(aName.toLowerCase()))
+			{
+				games.removeCurrent();
+				break;
+			}
+			else if (games.getCurrent().getSystem().toLowerCase().contains(aName.toLowerCase()))
+			{
+				games.removeCurrent();
+				break;
+			}
+			games.gotoNext();
+		}
+		System.out.println("Complete!");
+	}
+//	public void readGameFile(String aName)   					This method is somehow not working, I already email Dr. JJ
+//	{
+//		try {
+//			Scanner fileScanner = new Scanner(new File(aName));
+//			while(fileScanner.hasNextLine())
+//			{
+//				String fileLine = fileScanner.nextLine();
+//				String[] splitLines = fileLine.split(DELIM);
+//				if(splitLines.length == BODY)
+//				{
+//					String name = splitLines[0];
+//					String sys = splitLines[1];
+//					Game aG = new Game(name,sys);
+//					this.addGame(aG);
+//				}
+//			}
+//			fileScanner.close();
+//		}
+//		catch(Exception e)
+//		{
+//			e.printStackTrace();
+//		}
+//	}
+	public void readGameFile(String aName)  //read a file by buffered method
+	{
+		BufferedReader Br = null;
+		try 
+		{
+			String CurrentLine;
+			Br = new BufferedReader(new FileReader(aName));
+			while((CurrentLine = Br.readLine()) != null)
+			{
+				if(!CurrentLine.trim().equals(""))
+				{
+					String input[] = CurrentLine.split(DELIM);
+					String gameName = input[0] + DELIM;
+					//System.out.println("Hello");
+					for (int j = 1; j < input.length - 1; j++) 
+					{
+						gameName = gameName + input[j] + " " ;
+					}
+					String gameSys = input[input.length-1];
+					Game aG = new Game(gameName, gameSys);
+					this.addGame(aG);
+				}
+			}
+			Br.close();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
+	public void writeFile(String aName) //print out now file
+	{
+		try 
+		{
+			PrintWriter fileWriter = new PrintWriter(new FileOutputStream(new File(aName)));
+			games.reset();
+			while(games.hasMore())
+			{
+				Game aG = games.getCurrent();
+				fileWriter.println(aG.getName()+DELIM+aG.getSystem());
+				games.gotoNext();
+			}
+			fileWriter.close();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+	public void search(String aName, String aSys) //search a game in file
+	{
+		games.reset();
+		while(games.hasMore())
+		{
+			String n = games.getCurrent().getName();
+			String s = games.getCurrent().getSystem();
+			if(games.getCurrent() == null)
+			{
+				continue;
+			}
+			if(n.toLowerCase().contains(aName.toLowerCase()) && aSys.equals("*"))
+			{
+				list.add(new Game(n, s)); //add a game item into a search list
+				list.printSearch();
+			}
+			else if(s.toLowerCase().contains(aSys.toLowerCase()) && aName.equals("*"))
+			{
+				list.add(new Game(n, s));
+				list.printSearch();
+			}
+			else if(n.toLowerCase().contains(aName.toLowerCase()) 
+					&& s.toLowerCase().contains(aSys.toLowerCase()))
+			{
+				list.add(new Game(n, s));
+				list.printSearch();
+			}
+			else if(aSys.equals("*") && aName.equals("*"))
+			{
+				list.add(new Game(n, s));
+				list.printSearch();
+			}
+			games.gotoNext();
+		}
+	}
+	public void printSearch() //print search item
+	{
+		list.printSearch();
+	}
+	public void writeSearchFile(String aName) //print search game out to a new file with an input name
+	{
+		try 
+		{
+			PrintWriter fileWriter = new PrintWriter(new FileOutputStream(new File(aName)));
+			list.reset();
+			while(list.hasMore())
+			{
+				Game aG = list.getCurrent();
+				fileWriter.println(aG.getName()+DELIM+aG.getSystem());
+				list.gotoNext();
+			}
+			fileWriter.close();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
+}
+
+import java.io.*;
+public class SearchLL {
+	private GenLL<Game> list;
+	public SearchLL()
+	{
+		list = new GenLL<Game>();
+	}
+	public void add(Game aData)
+	{
+		list.add(aData);
+	}
+	public void printSearch()
+	{
+		list.print();
+	}
+	public void reset()
+	{
+		list.reset();
+	}
+	public boolean hasMore()
+	{
+		if(list.hasMore())
+			return true;
+		return false;
+	}
+	public void gotoNext()
+	{
+		list.gotoNext();
+	}
+	public Game getCurrent()
+	{
+		return list.getCurrent(); //get a current of search list
+	}
+//	public void writeFile(String aName) 				Already on the GameLL class
+//	{
+//		try 
+//		{
+//			PrintWriter fileWriter = new PrintWriter(new FileOutputStream(new File(aName),true));
+//			list.reset();
+//			while(list.hasMore())
+//			{
+//				Game aL = list.getCurrent();
+//				fileWriter.println(aL.getName()+"\t"+aL.getSystem());
+//				list.gotoNext();
+//			}
+//			fileWriter.close();
+//		}
+//		catch(Exception e)
+//		{
+//			e.printStackTrace();
+//		}
+//	}
+
+}
+
+import java.util.Scanner;
+import java.util.*;
+import java.io.*;
+public class VideoGameDatabase {
+	public static String fileName = "D:/coding/2022 fall/CSCE146Homework02/Collection.txt";//this is my path file. you can change it by click option 1
+	public static Scanner keyboard = new Scanner(System.in);
+	public static GameLL Game = new GameLL();
+	public static void main(String[] args) {
+		System.out.println("-----Welcome to the video game database!-----");
+		readFileAuto(); //automatic read a collection.txt file
+		boolean quit = false;
+		while(quit == false)
+		{
+			Prompt();
+			int input = keyboard.nextInt();
+			keyboard.nextLine();
+			switch(input)
+			{
+			case 0:
+				changeFile();
+				break;
+			case 1:	
+				Search();
+				break;
+			case 2:
+				add();
+				break;
+			case 3:
+				remove();
+				break;
+			case 4:
+				printSearch();
+				break;
+			case 5:
+				System.out.println("Enter the new File name: ");
+				String input00 = keyboard.nextLine();
+				printSearch(input00+".txt");
+				break;
+			case 9:
+				Game.printGames();
+				quit = true;
+				break;
+				default:
+					System.out.println("Invalit Input");
+			}
+			
+		}
+		Game.printGames();
+		System.out.println("Bye!");
+	}
+	public static void readFileAuto() //Note reading a file ?
+	{
+		Game.readGameFile("Collection.txt");
+		System.out.println("----------------------------------------\n"
+				+ "----------File Game is loading----------"
+				+ "\n----------------------------------------");
+	}
+	public static void changeFile()
+	{
+		System.out.println("Enter the name of your file: (must follow format <path+name.txt> ");
+		String input = keyboard.nextLine();
+		Game.readGameFile(input);
+	}
+	public static void Prompt()
+	{
+		System.out.println("\n-------------------------"
+				+ "\nFollow These Contruction:"
+				+ "\nEnter 0 to change file"
+				+ "\nEnter 1 to search the game"
+				+ "\nEnter 2 to add the game to file"
+				+ "\nEnter 3 to remove the game to file"
+				+ "\nEnter 4 to print the search result"
+				+ "\nEnter 5 to print current search to a new file"
+				+ "\nEnter 9 to quit");
+	}
+	public static void Search()
+	{
+		System.out.println("Enter the name of the game to find or '*' to find all matches: ");
+		String inputName = keyboard.nextLine();
+		System.out.println("Enter the name of the system to find or '*' to find all matches: ");
+		String inputSys = keyboard.nextLine();
+		Game.search(inputName, inputSys);
+		Game.printSearch();
+	}
+	public static void add()
+	{
+		System.out.println("Enter the name of the game:");
+		String inputName = keyboard.nextLine();
+		System.out.println("Enter the name of the system of the game:");
+		String inputSys = keyboard.nextLine();
+		Game.addGame(new Game(inputName, inputSys));
+	}
+	public static void remove()
+	{
+		System.out.println("Enter the name of the game you want to remove:");
+		String inputName = keyboard.nextLine();
+		Game.removeGame(inputName);
+	}
+	public static void printSearch()
+	{
+		System.out.println("Here your search list:");
+		Game.printSearch();
+	}
+	public static void printSearch(String aName)
+	{
+		System.out.println("-----Loading-----");
+		Game.writeSearchFile(aName);
+		System.out.println("Here your file and search list:");
+		Game.printSearch();
+	}
+	public static void print()
+	{
+		Game.printGames();
+	}
+}
+	
