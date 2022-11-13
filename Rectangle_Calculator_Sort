@@ -1,0 +1,145 @@
+import java.util.Scanner;
+public class Rectangle {
+	
+	public static void main(String[] args) {
+		double lengthRectangle = 0.0;
+		double widthRectangle = 0.0;
+		double total =0;
+		Scanner keyboard = new Scanner(System.in);	
+		System.out.println("Welcome to a Sorting Rectrangles collection program!\nEnter the size of the collection.");
+		boolean right = false;
+		while(!right) //so the program won't terminate when user type the invalid input.
+		{
+			int size = keyboard.nextInt();
+			keyboard.nextLine();
+		
+			if (size<0)
+			{
+				System.out.println("Invalid! Try again!");
+				continue;
+			}
+			
+			double[] first = new double[size]; 
+			double[] second = new double[size];
+			
+			for(int i=0; i<first.length; i++)//length array
+			{
+				System.out.println("Enter the length of the rectangle at index "+i);
+				lengthRectangle = keyboard.nextDouble();
+				keyboard.nextLine(); 
+				first[i] = lengthRectangle; //put the value into the array
+			}
+			for(int i=0; i<second.length; i++)//width array
+			{
+				System.out.println("Enter the width of the rectangle at index "+i);
+				widthRectangle = keyboard.nextDouble();
+				keyboard.nextLine();
+				second[i] = widthRectangle;
+			}
+			double[] area = new double[size]; // create a rectangle array
+			for(int i=0; i<first.length;i++)
+			{
+				for(int j=0; j<second.length;j++);
+				{
+					double temp1 = first[i];
+					double temp2 = second[i];
+					area[i] = temp1*temp2;
+				}
+			}
+			
+			boolean right1 = false;
+			while(!right1)
+			{
+				System.out.println("");
+				System.out.println("Please choose one of the options:\n1.Display the area from Smallest to Largest\n2.Display the area from Largest to Smallest\n3.Display the Average Area\n4.Display the Minimum area\n5.Display the Maximum area\n6.Exit the program");
+				int input = keyboard.nextInt(); //user input options that user choose.
+				keyboard.nextLine();
+				if (input == 1) 
+				{
+					for(int i = 0; i<area.length-1;i++)//Rearrange array
+					{
+						if(area[i]>area[i+1])
+						{
+							double temp = area[i];
+							area[i] = area[i+1];
+							area[i+1] = temp;
+						}
+					}
+					System.out.println("Order: "); //print out
+					for (int i=0;i<area.length;i++)
+						{
+							System.out.print(area[i]+ " ");
+						}
+					continue;
+				}
+				else if (input == 2)
+				{
+					for(int i=0; i<area.length-1;i++)
+					{
+						if(area[i]<area[i+1])
+						{
+							double temp = area[i];
+							area[i] = area[i+1];
+							area[i+1] = temp;
+						}
+					}
+					System.out.println("Order: ");
+					for (int i=0;i<area.length;i++)
+					{
+						System.out.print(area[i]+ " ");
+					}
+					continue;
+				}
+				else if(input == 3)
+				{
+					for(int i=0; i<area.length;i++)
+					{
+						total += area[i]; //find the total of the array
+					}
+					double average = (total)/(size);
+					System.out.println("The average is "+average);
+					continue;
+				}
+				else if(input == 4)
+				{
+					double min = area[0]; 
+					for(int i=0;i<area.length;i++)//find the min
+					{
+						if(area[i] < min)
+						{
+							min = area[i];
+						}
+					}
+					System.out.println("The Min is: "+min);
+					continue;
+				}
+				else if(input == 5)
+				{
+					double max = area[0]; 
+					for(int i=0;i<area.length;i++)
+					{
+						if(area[i] < max)
+						{
+							max = area[i];
+						}
+					}
+					System.out.println("The Max is: "+max);
+					continue;
+				}
+				else if(input == 6)
+				{
+					right1=true;
+				}
+				else
+				{
+					continue;
+				}
+			}
+			right = true;
+		}	
+		System.out.println("Bye!");
+		keyboard.close(); //close Scanner
+		
+	}
+}
+
