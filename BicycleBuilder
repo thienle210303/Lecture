@@ -1,0 +1,223 @@
+public class Bicycle {
+	private String make;//property
+	private Wheel frontWheel;
+	private Wheel backWheel;
+	private Frame frame;
+	
+	public Bicycle() { //default constructor
+		this.make = "none";
+		frontWheel = new Wheel();
+		backWheel = new Wheel();
+		frame = new Frame();
+	}
+	public Bicycle(String aM, Wheel aF, Wheel aB, Frame aFa) //para constructor
+	{
+		this.setMake(aM);
+		this.setFrontWheel(aF);
+		this.setBackWheel(aB);
+		this.setFrame(aFa);
+	}
+	public String getMake() //Accessors
+	{
+		return make;
+	}
+	public Wheel getFrontWheel()
+	{
+		return this.frontWheel;
+	}
+	public Wheel getBackWheel()
+	{
+		return this.backWheel;
+	}
+	public Frame getFrame()
+	{
+		return this.frame;
+	}
+	public void setMake(String aM) //Mutators
+	{
+		if(aM != null)
+		{
+			this.make = aM;
+		}
+		else
+		{
+			this.make = "none";
+		}
+	}
+	public void setFrontWheel(Wheel aW)
+	{
+		this.frontWheel = aW;
+	}
+	public void setBackWheel(Wheel aB)
+	{
+		this.backWheel = aB;
+	}
+	public void setFrame(Frame aFa)
+	{
+		this.frame = aFa;
+	}
+	public boolean equals(Bicycle aB)//equals method
+	{
+		return aB != null &&
+				this.make.equals(aB.getMake()) &&
+				this.frontWheel == aB.getFrontWheel() &&
+				this.backWheel == aB.getBackWheel() &&
+				this.frame == aB.getFrame();
+	}
+	public String toString() //toString method
+	{
+		return "[Bicycle] Make: "+this.make+" Front Wheel: "+this.frontWheel+" Back Wheel: "+this.backWheel+" Frame: "+this.frame;
+	}
+}
+
+public class Frame {
+	private double size;
+	private String type;
+	
+	public Frame()
+	{
+		this.size = 18.5;
+		this.type = "Diamond";
+	}
+	public Frame(double aS, String aT) 
+	{
+		this.setSize(aS);
+		this.setType(aT);
+	}
+	public double getSize()
+	{
+		return this.size;
+	}
+	public String getType()
+	{
+		return this.type;
+	}
+	public void setSize(double aS)
+	{
+		if(aS >= 18.5 && aS<=60)
+		{
+			this.size = aS;
+		}
+		else
+		{
+			this.size = 18.5;
+		}
+	}
+	public void setType(String aT)
+	{
+		if (aT != null)
+			this.type = aT;
+		else 
+			this.type = "Diamond";
+		
+		if (aT.equalsIgnoreCase("Diamond")||aT.equalsIgnoreCase("Step-Throught")||aT.equalsIgnoreCase("Truss")||aT.equalsIgnoreCase("Penny-Farthing"))
+		{
+			this.type = aT;
+		}
+		else this.type = "Diamond";
+	}
+	public String toString()
+	{
+		return "[Frame] Size: "+this.size+" Type: "+this.type;
+	}
+	public boolean equals(Frame aF)
+	{
+		return aF != null &&
+				this.type.equals(aF.getType()) &&
+				this.size == aF.getSize();
+	}
+}
+
+public class Wheel {
+	private double diameter;
+	private double width;
+	
+	public Wheel() //default
+	{
+		this.diameter = 16;
+		this.width = 1;
+	}
+	public Wheel(double aD, double aW)
+	{
+		this.setDiameter(aD);
+		this.setWidth(aW);
+	}
+	//Accessors
+	public double getDiameter()
+	{
+		return this.diameter;
+	}
+	public double getWidth()
+	{
+		return this.width;
+	}
+	//Mutator
+	public void setDiameter(double aD)
+	{
+		if(aD >=16 && aD <=55)
+			this.diameter = aD;
+		else 
+			this.diameter = 16;
+	}
+	public void setWidth(double aW)
+	{
+		if(aW >= 1 && aW<2.5)
+			this.width = aW;
+		else 
+			this.width = 1;
+	}
+	public String toString()
+	{
+		return "[Wheel] Diameter: "+ this.diameter+" Width: "+this.width;
+	}
+	public boolean equals(Wheel aW)
+	{
+		return aW != null &&
+				this.diameter == aW.getDiameter() &&
+				this.width == aW.getWidth();
+	}
+}
+
+public class BicycleBuilderTester {
+
+	public static void main(String[] args) {
+		System.out.println("---------------------------------\nWelcome to the Bicycle Builder Tester!\n---------------------------------");
+		//Default Bike
+		System.out.println("First we will create a \"Default\" Bicycle");
+		Bicycle b01 = new Bicycle();
+		System.out.println("Printing the Bicycle's data");
+		System.out.println("Bicycle's make: "+b01.getMake());
+		System.out.println("Bicycle's front wheel: Diameter "+b01.getFrontWheel().getDiameter()+" Width: "+b01.getFrontWheel().getWidth());
+		System.out.println("Bicycle's back wheel: Diameter "+b01.getBackWheel().getDiameter()+" Width: "+b01.getBackWheel().getWidth());
+		System.out.println("Bicycle's frame: Size: "+b01.getFrame().getSize()+" Type: "+b01.getFrame().getType());
+		System.out.println("\nTesting the toString method");
+		System.out.println(b01);
+		
+		//Setting wrong properties.
+		System.out.println("\nSetting invalid values for the default bike's wheels and frame");
+		b01.setBackWheel(new Wheel(0,0));
+		b01.setFrontWheel(new Wheel(10000,10000));
+		b01.setFrame(new Frame(0.0, "hexagon"));
+		System.out.println(b01);
+		
+		//Param Bike
+		System.out.println("\nCreating another bike using the parameterized constructor");
+		Bicycle b02 = new Bicycle("Big Wheel", new Wheel(55.0,2.5), new Wheel(18.0,2.0),new Frame(60.0, "Penny-Farthing"));
+		System.out.println(b02);
+		
+		System.out.println("\nCreating another bike using the parameterized constructor with invalid values");
+		Bicycle b03 = new Bicycle(null, new Wheel(555.0,-2.5), new Wheel(-18.0,22.0),new Frame(-60.0, "dirt"));
+		System.out.println(b03);
+		
+		//Equals
+		System.out.println("\nChecking the \"equals\" method");
+		System.out.println("Does the first and third bicycles have different memory addresses? "+(b01!=b03));
+		System.out.println("Does the first and third bicycles have the same properties? "+b01.equals(b03));
+		System.out.println("\n---------------------------------\nTests Complete! Goodbye!\n---------------------------------");
+
+	}
+
+}
+
+
+
