@@ -1,0 +1,127 @@
+import java.util.Scanner;
+public class DateAndTimeTester
+{
+	public static void run2()
+		{
+			Scanner keyboard = new Scanner(System.in);
+			printGreetings();
+			boolean quit = false;
+			while(!quit)
+			{
+				printOptions();
+				String input = keyboard.nextLine();
+				if(!isValidFormat(input))//calling and checking condition.
+				{
+					System.out.println("The date and time is not valid");
+				}
+				else if(isValidFormat(input))
+				{
+					System.out.println("The date and time is valid");
+				}
+				System.out.println("Would you lke to exit? Type \"quit\" to exit or press [Enter] to continue");
+				quit = keyboard.nextLine().equalsIgnoreCase("quit");
+			}
+			System.out.println("Goodbye!");
+			keyboard.close(); //close Scanner;
+		}
+	public static void printGreetings()
+	{
+		System.out.println("Welcome to a program check dates and times is valid or invalid!");
+			
+	}
+	public static void printOptions()
+	{
+		System.out.println("Enter a date and time (MM/DD hh:mm) and I will determine if it is valid!");
+	}
+
+	public static boolean isValidFormat(String input)
+	{
+		String copyInput = input; //create a format MM/DD hh:mm as String
+		int workingIndex1 = copyInput.lastIndexOf("/");
+		String month = copyInput.substring(0,workingIndex1);
+		int workingIndex2 = copyInput.indexOf(" ");
+		String day = copyInput.substring(workingIndex1+1,workingIndex2);
+		int workingIndex3 = copyInput.lastIndexOf(":");
+		String hour = copyInput.substring(workingIndex2+1,workingIndex3);
+		String min = copyInput.substring(workingIndex3+1);
+		if (!isValidDate(month,day) || !isValidTime(hour,min))
+		{
+			return false;
+		}
+		return true;
+	}
+	public static boolean isValidDate(String month, String day)
+	{
+		while (!getMonth(month) && !getDay(day,month))//calling method annd condition
+		{
+			return false;
+		}
+		return true;
+	}
+	public static boolean getMonth(String month)
+	{
+		int imonth = Integer.parseInt(month);//convert String to int
+		if ((imonth<1)||(imonth>12))
+		{
+			return false;
+		}
+		return true;
+	}
+	public static boolean getDay(String day, String month)
+	{
+		int iday = Integer.parseInt(day);
+		int imonth = Integer.parseInt(month);
+		if ((imonth == 4 || imonth == 6 || imonth == 9 || imonth == 11) //checking condition
+				&& (iday < 1 || iday > 30))
+		{
+			return  false;
+		}
+		
+		else if ((imonth == 1 || imonth == 3 || imonth == 5 || imonth == 7 || imonth == 8 || imonth == 10 || imonth == 12) 
+				&& (iday < 1 || iday > 31))
+		{
+			return false;
+		}
+		
+		else if (imonth == 2 && (iday > 28 || iday <1)) 
+		{
+			return false;
+		}
+		return true;
+	}
+	public static boolean isValidTime(String hour, String min)
+	{
+		return getHour(hour) && getMin(min);
+	}
+	public static boolean getHour(String hour)
+	{
+		int ihour = Integer.parseInt(hour);
+		if (ihour<1 || ihour>12)
+		{
+			return false;
+		}
+		return true;
+	}
+	public static boolean getMin(String min)
+	{
+		int imin = Integer.parseInt(min);
+		if (imin<0 || imin>60)
+		{
+			return false;
+		}
+		return true;
+	}
+}
+
+
+public class DateAndTimeDriver {
+		public static void main(String[] args) //the main part
+		{
+			DateAndTimeDriver dtTester = new DateAndTimeDriver();
+			dtTester.run();
+		}
+		public void run() //call another class
+		{
+			Lab9xDateAndTimeTester.run2();
+		}
+}
