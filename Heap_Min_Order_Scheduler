@@ -1,0 +1,264 @@
+public class MinHeap<T extends Comparable<T>> {
+	private T[] heap;
+	public static final int DEF_SIZE = 128;
+	private int lastIndex;
+	public MinHeap()
+	{
+		init(DEF_SIZE);
+	}
+	public MinHeap(int size)
+	{
+		init(size);
+	}
+	private void init(int size)
+	{
+		if(size > 0)
+		{
+			heap = (T[])(new Comparable[size]);
+			lastIndex = 0;
+		}
+		else
+			init(DEF_SIZE);
+	}
+	public void add(T aData)
+	{
+		if(lastIndex >= heap.length)
+			return;
+		heap[lastIndex] = aData;
+		bubbleUp();
+		lastIndex++;
+	}
+	private void bubbleUp()
+	{
+		int index = lastIndex;
+		while(index > 0 && heap[(index-1)/2].compareTo(heap[index])>0)
+		{
+			T temp = heap[(index-1)/2];
+			heap[(index-1)/2] = heap[index];
+			heap[index] = temp;
+			index = (index-1)/2;
+		}
+	}
+	public T remove()
+	{
+		if(lastIndex == 0)
+			return null;
+		T ret = heap[0];
+		heap[0] = heap[lastIndex-1];
+		heap[lastIndex-1] = null;
+		lastIndex--;
+		bubbleDown();
+		return ret;
+	}
+	private void bubbleDown()
+	{
+		int index = 0;
+		while(index*2+1 < lastIndex)
+		{
+			int smallIndex = index*2+1;
+			if(index*2+2 < lastIndex && heap[index*2+1].compareTo(heap[index*2+2])>0)
+				smallIndex = index*2+2;
+			if(heap[index].compareTo(heap[smallIndex])>0)
+			{
+				T temp = heap[index];
+				heap[index] = heap[smallIndex];
+				heap[smallIndex] = temp;
+			}
+			else
+				break;
+			index = smallIndex;
+		}
+	}
+	public T peek()
+	{
+		return heap[0];
+	}
+}
+
+public class Order implements Comparable<Order>{
+	private String customer;
+	private String foodOrder;
+	private int cookTime;
+	private int arrivalTime;
+	private int cookTimeLeft;
+	public Order()
+	{
+		customer = foodOrder = "none";
+		cookTime = cookTimeLeft = 1 ;
+		arrivalTime = 0;
+	}
+	public Order(String aC, String aF, int cT, int aT)
+	{
+		setCustomer(aC);
+		setFoodOrder(aF);
+		setCookTime(cT);
+		setArrivalTime(aT);
+	}
+	public String getCustomer()
+	{
+		return this.customer;
+	}
+	public String getFoodOrder()
+	{
+		return this.foodOrder;
+	}
+	public int getCookTime()
+	{
+		return this.cookTime;
+	}
+	public int getArrivalTime()
+	{
+		return this.arrivalTime;
+	}
+	private void setCustomer(String aC)
+	{
+		if(aC != null)
+			this.customer = aC;
+		else
+			this.customer = "none";
+	}
+	private void setFoodOrder(String aF)
+	{
+		if(aF != null)
+			this.foodOrder = aF;
+		else
+			this.foodOrder = "none";
+	}
+	private void setCookTime(int aT)
+	{
+		if(aT > 0)
+			this.cookTime = this.cookTimeLeft = aT;
+		else
+			this.cookTime = this.cookTimeLeft = 1;
+	}
+	private void setArrivalTime(int aAT)
+	{
+		if(aAT > 0)
+			this.arrivalTime = aAT;
+		else
+			this.arrivalTime = 0;
+	}
+	public String toString()
+	{
+		return "Customer: "+this.customer+" ,Order: "+this.foodOrder+" Cooking Time Left:"+ this.cookTimeLeft;
+	}
+	public int compareTo(Order aO)
+	{
+		if(aO == null)
+			return -1;
+		else if(this.cookTime > aO.getCookTime())
+			return 1;
+		else if(this.cookTime < aO.getCookTime())
+			return -1;
+		else 
+			return 0;
+	}
+	public void cookForOneMinute()
+	{
+		this.cookTimeLeft --;
+	}
+	public boolean isDone()
+	{
+		if(this.cookTimeLeft == 0)
+			return true;
+		return false;
+	}
+	
+}
+
+public class OrderScheduler {
+	MinHeap<Order> Orders; //create a MinHeapp of Order
+	Order currentOrder; //create an currentOrder
+	int currentMin = 0; //current time
+	int totalOrder = 0; //total Order
+	double waitingTime = 0; //waiting time
+	public OrderScheduler() //set the default constructor
+	{
+		Orders = new MinHeap<Order>();
+		currentOrder = null;
+		currentMin = totalOrder = 0;
+		waitingTime = 0;
+	}
+	public void addOrder(Order aO) //add order to MinHeap
+	{
+		if(currentOrder == null) //if currentorder is not then assign it as current order
+			currentOrder = aO;
+		else
+			Orders.add(aO); //or add it in the MinHeap or wait list
+		totalOrder++;
+	}
+	public void advanceOneMinute() //CookS
+	{
+		currentMin ++;
+		currentOrder.cookForOneMinute();
+		if(currentOrder.isDone())
+		{
+			waitingTime += currentMin - currentOrder.getArrivalTime();
+			currentOrder = Orders.remove();
+		}
+	}
+	public boolean isDone() //Finish all
+	{
+		if(currentOrder == null)
+			return true;
+		return false;
+	}
+	public double getAverageWaitingTime()
+	{
+		return waitingTime/totalOrder;
+	}
+	public Order getCurrentOrder()
+	{
+		return currentOrder;
+	}
+	
+}
+
+
+import java.util.*;
+public class OrderSchedulerSimulator {
+
+	public static final String[] NAMES = {"Alicja Ulderico","Philomel Olivette","Ines Marleen","Frauke George","Goodwin Kendra",
+											"Onesiphoros Davorka", "Albin Bao", "Nirmala Erna", "Imtiyaz Umar","Marita Adel"};
+	public static final String[] FOODS = {"Raisin and strawberry yoghurt","Roquefort salad","Mussels","Cuttlefish with rice","Sausage with berry salad",
+											"Mulberry and broccoli salad","Feta and apricot salad","Chestnut and chorizo soup","Spaghetti squash","Cheddar and ham sandwich"};
+	public static final int MAX_COOK_TIME = 20;
+	public static final int MIN_COOK_TIME = 5;
+	public static final int TOTAL_ORDERS = 10;
+	public static final String DEC = "-------------------------------------------";
+	public static void main(String[] args) {
+		Random r = new Random(100);//Fixing the random seed to 100
+		OrderScheduler s = new OrderScheduler();
+		//Creating a sequence of orders
+		Order[] orders = new Order[10];
+		for(int i=0;i<TOTAL_ORDERS;i++)
+		{
+			orders[i] = new Order(NAMES[i],FOODS[i],r.nextInt(MAX_COOK_TIME)+MIN_COOK_TIME,i*5);
+		}
+		System.out.println(DEC+"\nStarting Order Scheduler Simulation\n"+DEC);
+		//Starting the simulation
+		int count = 0;
+		int currOrder = 0;
+		while(true)
+		{
+			System.out.println(DEC+"Minute "+count+DEC);
+			if(currOrder < TOTAL_ORDERS && count == orders[currOrder].getArrivalTime())
+			{
+				System.out.println("ORDER ADDED: "+orders[currOrder]);
+				s.addOrder(orders[currOrder]);
+				currOrder++;
+			}
+			if(s.isDone())
+			{
+				System.out.println("ALL ORDERS COMPLETE");
+				break;
+			}
+			System.out.println("Currently Cooking Order:\n"+s.getCurrentOrder());
+			s.advanceOneMinute();
+			count++;
+		}
+		System.out.println("The average Waiting Time is: "+s.getAverageWaitingTime()+" minutes");
+	}
+
+}
+
