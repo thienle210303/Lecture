@@ -1,0 +1,128 @@
+public class IntLL {
+	private class ListNode
+	{
+		int data;
+		ListNode link;
+		public ListNode(int aData, ListNode aLink)
+		{
+			data = aData;
+			link = aLink;
+		}
+	}
+	private ListNode head; //first element
+	private ListNode current; //current node of interest
+	private ListNode previous;//
+	public IntLL() //Defaut constructor
+	{
+		head = current = previous = null;
+	}
+	public void add(int aData)
+	{
+		ListNode newNode = new ListNode(aData, null);
+		if(head == null) //empty list
+		{
+			head = current = newNode; //head and current are memory address
+			return;
+		}
+		ListNode temp = head; //saving the same memory address not a clone
+		
+		while(temp.link != null) //keep temp move forward
+		{ 
+			temp = temp.link;
+		}
+		temp.link = newNode;
+	}
+	public void print()
+	{
+		/*
+		ListNode temp = head;
+		while(temp != null)
+		{
+			System.out.println(temp.data);
+			temp = temp.link;
+		}
+		System.out.println();
+		*/
+		//use for loop as professional way to excute the program straigh as mean faster
+		for(ListNode temp = head; temp != null; temp = temp.link)
+			System.out.println(temp.data);
+	}
+	
+	public int getCurrent()
+	{
+		if(current != null)
+		{
+			return current.data;
+		}
+		return 0;
+	}
+	public void gotoNext()
+	{
+		if(current != null)
+		{
+			previous = current;
+			current = current.link;
+		}
+	}
+	public void setCurrent(int aData)
+	{
+		if(current != null)
+			current.data = aData;
+	}
+	public void reset()
+	{
+		current = head;
+		previous = null;
+	}
+	public boolean hasMore()
+	{
+		return current != null;
+	}
+	public void removeCurrent()
+	{
+		if(current != null && previous == null)
+		{
+			head = head.link; //skipping over where current
+			current = head; //memory lost and deleted
+		}
+		else if(current != null && previous != null)
+		{ //previous only null when current == head node
+			previous.link = current.link; //can not call current = current.link
+			current = current.link;
+		}
+	}
+	public void addAfterCurrent(int aData)
+	{ 
+		if(current == null) //cannot add something does not exist
+			return;
+		ListNode newNode = new ListNode(aData,current.link);
+		current.link = newNode;
+		
+	}
+}
+
+public class IntLLTester {
+	public static void main(String[] args)
+	{
+		IntLL iLL = new IntLL();
+		
+		for(int i=0; i<=4;i++)
+		{
+			iLL.add(i);
+		}
+		
+		iLL.print();
+		iLL.addAfterCurrent(22);
+		iLL.print();
+		
+		iLL.gotoNext();
+		iLL.addAfterCurrent(23);
+		iLL.print();
+		
+		iLL.setCurrent(42);
+		iLL.print();
+		
+		iLL.removeCurrent();
+		iLL.print();
+}
+}
