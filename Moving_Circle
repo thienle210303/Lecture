@@ -1,0 +1,142 @@
+public class MovingCircle {
+	private double x; //property
+	private double y;
+	private double diameter;
+	private double veloX;
+	private double veloY;
+	
+	public MovingCircle()//Default contructor
+	{
+		this.x =0;
+		this.y =0;
+		this.diameter =0.0;
+		this.veloX =0;
+		this.veloY =0;
+	}
+	
+	public MovingCircle(double aX, double aY, double aD, double avX, double avY)
+	{ //Parameter constructor
+		this.setX(aX);
+		this.setY(aY);
+		this.setD(aD);
+		this.setveloX(avX);
+		this.setveloY(avY);
+	}
+	
+	public double getX() { //Accessors
+		return this.x;
+	}
+	public double getY()
+	{
+		return this.y;
+	}
+	public double getD() {
+		return this.diameter;
+	}
+	public double getveloX()
+	{
+		return this.veloX;
+	}
+	public double getveloY()
+	{
+		return this.veloY;
+	}
+	
+	public void setX(double aX) //Mutators
+	{
+		this.x = aX;
+	}
+	public void setY(double aY)
+	{
+		this.y = aY;
+	}
+	public void setD(double aD)
+	{
+		if (aD > 0.0)
+			this.diameter = aD;
+		else 
+			this.diameter = 0;
+	}
+	public void setveloX(double vX)
+	{
+		this.veloX = vX;
+	}
+	public void setveloY(double vY)
+	{
+		this.veloY = vY;
+	}
+	public String toString() //toString method
+	{
+		return "[Circel]  X: "+this.x+" Y: "+this.y+" Diameter: "+this.diameter+" Velocity X: "+this.veloX+" Velocity Y: "+this.veloY;
+	}
+	public boolean equals(MovingCircle aP)//equals method
+	{
+		return aP != null &&
+				this.x == aP.getX() &&
+				this.y == aP.getY() &&
+				this.diameter == aP.getD() &&
+				this.veloX == aP.getveloX() &&
+				this.veloY == aP.getveloY();
+	}
+	public void move() //moving method
+	{
+		x += veloX;
+		y += veloY;
+	}
+	public boolean isColliding(MovingCircle aX) //checking collide method
+	{
+		double diffX = aX.getX()-this.x;
+		double diffY = aX.getY()-this.y;
+		double powDiffX = Math.pow(diffX, 2);
+		double powDiffY = Math.pow(diffY, 2);
+		double totalRadius = (aX.getD()+this.diameter)/2;
+		if(Math.sqrt(powDiffX+powDiffY) <= totalRadius)
+		{
+			return true;
+		}
+		else if(Math.sqrt(powDiffX+powDiffY) > totalRadius) {
+			return false;
+		}
+		return true;
+	}
+}
+
+import java.util.Scanner;
+public class CircleSimulator {
+	public static void main(String[] args) {
+		Scanner keyboard = new Scanner(System.in);
+		System.out.println("---------------------------\nWelcome to the Circle Collision Simulator!\n---------------------------");
+		boolean quit = false;
+		while(!quit)
+		{
+			System.out.println("Enter the data for Circle01. X, Y, Diameter, Velocity X, and Velocity Y");
+			MovingCircle c1 = new MovingCircle(keyboard.nextDouble(),
+									keyboard.nextDouble(),
+									keyboard.nextDouble(),
+									keyboard.nextDouble(),
+									keyboard.nextDouble());
+			System.out.println("Enter the data for Circle02. X, Y, Diameter, Velocity X, and Velocity Y");
+			MovingCircle c2 = new MovingCircle(keyboard.nextDouble(),
+									keyboard.nextDouble(),
+									keyboard.nextDouble(),
+									keyboard.nextDouble(),
+									keyboard.nextDouble());
+			System.out.println(c1+"\n"+c2+"\n");
+			for(int i=0;i<100;i++)
+			{
+				c1.move();
+				c2.move();
+				System.out.println(c1+"\n"+c2+"\n");
+				if(c1.isColliding(c2))
+				{
+					System.out.println("Collision!\n");
+					break;
+				}
+			}
+			System.out.println("Would you like to run the simulation again? True or False?");
+			quit = !keyboard.nextBoolean();
+		}
+		System.out.println("Goodbye!");
+	}
+
+}
