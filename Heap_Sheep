@@ -1,0 +1,256 @@
+public class Sheep implements Comparable<Sheep> {
+	private String name;
+	private int time;
+	private int arrival;
+	public Sheep()
+	{
+		this.name = "none";
+		this.time = this.arrival = 0;
+	}
+	public Sheep(String aN, int aT, int aA) {
+		setName(aN);
+		setTime(aT);
+		setArrival(aA);
+	}
+	public String getName()
+	{
+		return this.name;
+	}
+	public int getTime()
+	{
+		return this.time;
+	}
+	public int getArrival()
+	{
+		return this.arrival;
+	}
+	private void setName(String aN)
+	{
+		if(aN != null)
+			this.name = aN;
+		else
+			this.name = "none";
+	}
+	private void setTime(int aT)
+	{
+		if(aT < 0)
+			this.time = 0;
+		else
+			this.time = aT;
+	}
+	private void setArrival(int aA)
+	{
+		if(aA < 0)
+			this.arrival = 0;
+		else
+			this.arrival = aA;
+	}
+	public String toString()
+	{
+		return "Name: " +this.name+" Sheer Time: "+this.time+ " Arrival Time:"+ this.arrival;
+	}
+	public int compareTo(Sheep aH)
+	{
+		if(aH == null)
+			return -1;
+		else if(this.time > aH.getTime())
+			return 1;
+		else if(this.time < aH.getTime())
+			return -1;
+		else
+			return this.name.compareTo(aH.getName());
+	}
+	
+}
+
+public class SheepHeap<T extends Comparable<T>> {
+	private T[] heap;
+	public static final int DEF_SIZE = 128;
+	private int lastIndex;
+	public SheepHeap()
+	{
+		init(DEF_SIZE);
+	}
+	public SheepHeap(int size)
+	{
+		init(size);
+	}
+	private void init(int size)
+	{
+		if(size > 0)
+		{
+			heap = (T[])(new Comparable[size]);
+			lastIndex = 0;
+		}
+		else
+			init(DEF_SIZE);
+	}
+	public void add(T aS)
+	{
+		if(lastIndex >= heap.length)
+			return;
+		heap[lastIndex] = aS;
+		bubbleUp();
+		lastIndex++;
+	}
+	private void bubbleUp()
+	{
+		int index = lastIndex;
+		while(index > 0 && heap[(index-1)/2].compareTo(heap[index])> 0)
+		{
+			T temp  = heap[(index-1)/2];
+			heap[(index-1)/2] = heap[index];
+			heap[index] = temp;
+			index = (index-1)/2;
+		}
+	}
+	public T remove()
+	{
+		if(lastIndex == 0)
+			return null;
+		T ret = heap[0];
+		heap[0] = heap[lastIndex-1];
+		heap[lastIndex-1] = null;
+		lastIndex--;
+		bubbleDown();
+		return ret;
+	}
+	private void bubbleDown() {
+		int index = 0;
+		while(index*2+1 < lastIndex)
+		{
+			int smallIndex = index*2+1;
+			if(index*2+2 < lastIndex && heap[index*2+1].compareTo(heap[index*2+2])>0)
+				smallIndex = index*2+2;
+			if(heap[index].compareTo(heap[smallIndex])>0)
+			{
+				T temp = heap[index];
+				heap[index] = heap[smallIndex];
+				heap[smallIndex] = temp;
+			}
+			else
+				break;
+			index = smallIndex;
+		}
+	}
+	public T peek()
+	{
+		return heap[0];
+	}
+}
+
+import java.util.*;
+import java.io.*;
+public class SheepScheduler {
+	public static final Scanner keyboard = new Scanner(System.in);
+	public static SheepHeap<Sheep> SheepsWait;
+	public static Sheep[] Sheeps;
+	public static Sheep[] tempSheeps;
+	public static Sheep currSheep;
+	public static int arrivalTime; //check arrival time
+	public static int number; //number of sheep
+	public static void main(String[] args) {
+		System.out.println("-----Welcome Sheep Shearing Scheduler-----");
+		boolean over = false;
+		while(over == false)
+		{
+			setInit(); //set initializing
+			System.out.println("Let's Sheep!");
+			System.out.println("Enter a Sheep File name:");
+			String input = keyboard.nextLine();
+			read(input+".txt");
+			setSheeps(); //set the sheep in order who come first
+			comeFirst(); //shear the first sheep
+			boolean sheer = true;
+			while(sheer == true)
+			{
+				arrivalTime += currSheep.getTime(); //who come when the current sheep is shearing
+				while(number < Sheeps.length && Sheeps[number].getArrival() < arrivalTime)
+				{
+					SheepsWait.add(Sheeps[number]);
+					number++;
+				}
+				System.out.println(currSheep);
+				currSheep = SheepsWait.remove();
+				if(currSheep == null || SheepsWait == null)
+					break;
+			}
+			System.out.println("Done");
+			System.out.println("Do you want to play again? \"yes\" to play");
+			String play = keyboard.nextLine();
+			if(play.equalsIgnoreCase("yes"))
+				continue;
+			else
+				break;
+		}
+		System.out.println("Bye");
+	}
+	
+	public static void comeFirst() {
+		boolean hasSwapped = true;
+		while(hasSwapped)
+		{
+			hasSwapped = false;
+			for(int i = 0; i<Sheeps.length-1;i++)
+			{
+				if(Sheeps[i].getArrival() > Sheeps[i+1].getArrival())
+				{
+					Sheep temp = Sheeps[i];
+					Sheeps[i] = Sheeps[i+1];
+					Sheeps[i+1] = temp;
+					hasSwapped = true;
+				}
+			}
+		}
+		currSheep = Sheeps[0];
+	}
+	public static void setSheeps()
+	{
+		int count = 0;
+		for(int i = 0; i<tempSheeps.length;i++)
+		{
+			if(tempSheeps[i] != null)
+				count++;
+		}
+		Sheeps = new Sheep[count];
+		for(int i = 0; i< count;i++)
+		{
+			Sheeps[i] = tempSheeps[i];
+		}
+	}
+	public static void setInit()
+	{
+		tempSheeps = new Sheep[128];
+		SheepsWait = new SheepHeap<Sheep>();
+		currSheep = null;
+		arrivalTime = 0;
+		number = 1;
+	}
+	public static void read(String aN)
+	{
+		try
+		{
+			int count = 0;
+			Scanner fileScanner = new Scanner(new File(aN));
+			while(fileScanner.hasNextLine())
+			{
+				String fileLine = fileScanner.nextLine();
+				String[] part = fileLine.split("\t");
+				String name = part[0];
+				int sheerTime = Integer.parseInt(part[1]);
+				int arrival = Integer.parseInt(part[2]);
+				tempSheeps[count] = new Sheep(name, sheerTime, arrival);
+				count++;
+			}
+			fileScanner.close();
+			
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+}
+
+
