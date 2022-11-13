@@ -1,0 +1,140 @@
+import java.util.Scanner;
+import java.util.Random;
+public class Rock_Paper_Scissor {
+	public static void main(String[] args) {
+		Scanner keyboard = new Scanner(System.in);
+		Random r = new Random();
+		boolean playagain = true; //to make program run again from this point
+		do
+		{
+			System.out.println("Welcome to Rock Paper Scisoor game!\nEnter \"Rock\", \"Scissor\" or \"Paper\" to play");
+			int win = 0; //set the win, loss and round as counter;
+			int loss = 0;
+			int round = 4;
+			int tie = 0;
+			int user = 0;
+
+
+			for(int i=0;i<=round;i++)
+			{
+				int bot = r.nextInt(1,4);   //random number from 1 to 3
+				String input = keyboard.next();
+				if(input.equals("Rock"))
+				{
+					user = 1;
+				}
+				if(input.equals("Paper"))
+				{
+					user = 2;
+				}
+				if(input.equals("Scissor"))
+				{
+					user = 3;
+				}
+				if (user > 3 || user <1)
+				{
+				System.out.println("That's invalid input (your fault)!! Bot Win!!");
+				loss++;
+				round++;
+				System.out.println("Enter \"Rock\", \"Scissor\" or \"Paper\" to play");
+				}	
+			
+				if (user == 1) //user input Rock
+				{
+					if(bot == 1)
+					{
+						System.out.println("It's Tie! Rock vs Rock \nNo point");
+						tie++;
+						i++;
+						System.out.println("Enter \"Rock\", \"Scissor\" or \"Paper\" to play");
+					}
+				else if(bot == 2)
+				{
+					System.out.println("Bot Win! Rock vs Paper");
+					loss++; //count up
+					i++;
+					System.out.println("Enter \"Rock\", \"Scissor\" or \"Paper\" to play");
+				}
+					else if(bot == 3)
+					{
+						System.out.println("You Win! Rock vs Scissor");
+						win++;
+						i++;
+						System.out.println("Enter \"Rock\", \"Scissor\" or \"Paper\" to play");
+					}
+					
+				}
+			
+				if (user == 2)
+				{
+
+					if(bot ==2)
+					{
+						System.out.println("It's Tie! Paper vs Paper \nNo point");
+						tie++;
+						i++;
+						System.out.println("Enter \"Rock\", \"Scissor\" or \"Paper\" to play");
+					}
+					else if (bot ==1)
+					{
+						System.out.println("You Win! Paper vs Rock");
+						win++;
+						i++;
+						System.out.println("Enter \"Rock\", \"Scissor\" or \"Paper\" to play");
+					}
+					else if (bot ==3)
+					{
+						System.out.println("Bot Win! Paper vs Scissor");
+						loss++;
+						i++;
+						System.out.println("Enter \"Rock\", \"Scissor\" or \"Paper\" to play");
+					}
+				}
+			
+				if (user == 3)
+				{
+					if (bot ==3)
+					{
+						System.out.println("It's Tie! Scissor vs Scissor \nNo point");
+						tie++;
+						i++;
+						System.out.println("Enter \"Rock\", \"Scissor\" or \"Paper\" to play");
+					}
+					else if (bot ==1)
+					{
+						System.out.println("Bot Win! Scissor vs Rock");
+						loss++;
+						i++;
+						System.out.println("Enter \"Rock\", \"Scissor\" or \"Paper\" to play");
+					}
+					else if (bot == 2)
+					{
+						System.out.println("You Win! Scissor vs Paper");
+						win++;
+						i++;
+						System.out.println("Enter \"Rock\", \"Scissor\" or \"Paper\" to play");
+					}
+				}
+			}
+			if (win>loss) //condition for user win.
+			{
+				System.out.println("You Wins with ratio "+ win + " vs "+loss+ " and "+tie+" tie.");
+			}
+			if (loss>win)
+			{
+				System.out.println("Bot wins with ratio "+ loss + " vs "+ win+" and "+tie+" tie.");
+			}
+			if (tie == 3 || win == loss)
+			{
+				System.out.println("No winner! All tie! with ratio "+win+"-"+loss+"-"+tie);
+			}
+			System.out.println("Enter \"true\" to play again!");
+			playagain = keyboard.nextBoolean();	//ask the user to play again.
+		
+		}while(playagain);
+		keyboard.close();
+	
+	}
+}
+
+
