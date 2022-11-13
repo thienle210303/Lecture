@@ -1,0 +1,99 @@
+import java.util.Scanner;
+public class Count_The_Vowel {
+	
+	public static void main(String[] args) {
+		System.out.println("Welcome to the vowel counter and sorter!\nEnter a phrase!");
+		Scanner keyboard = new Scanner(System.in);
+		String input1 = keyboard.nextLine().toUpperCase(); //convert String to the upper case or capital
+		
+		int count1 = 0; // create a counter
+		int count2 = 0;
+		int count3 = 0;
+		int count4 = 0;
+		int count5 = 0;
+
+		
+		for (int t=0;t<input1.length();t++)
+		{
+			
+		
+			if (input1.charAt(t) == 'A')
+			{
+				count1++; //count the times of letter repeat
+			}
+			
+			if(input1.charAt(t) == 'E')
+			{
+				count2++;
+			}
+			
+			if(input1.charAt(t) == 'I')
+			{
+				count3++;
+			}
+			
+			if(input1.charAt(t) == 'O')
+			{
+				count4++;
+			}
+			
+			if(input1.charAt(t) == 'U')
+			{
+				count5++;
+			}
+		}
+		
+		String[] array1 = {"A","E","I","O","U"};
+		int[] array2 = {count1,count2,count3,count4,count5};
+		
+		boolean swapped = true;
+		while (swapped)
+		{
+			swapped = false;
+			for (int t = 0; t<array2.length-1;t++)
+			{
+			
+				if(array2[t] > array2[t+1])
+//swap the location of the letter in the string from the smallest to largest based on count.
+				{
+					String temp1= "";
+					int temp2=0;
+					
+					temp1 = array1[t]; 
+					array1[t] = array1[t+1];
+					array1[t+1] = temp1;
+					
+					temp2 = array2[t];
+					array2[t] = array2[t+1];
+					array2[t+1] = temp2;
+					swapped = true;
+				}
+			}
+		}
+		
+		for (int i = 0; i<array1.length;i++)
+		{
+			for (int j = i+1; j<array1.length; j++)
+				// comparing adjacent strings in the array
+			{
+				String temp1 = array1[j];
+				if (array1[j].compareTo(array1[j]) < 0)
+				{
+					temp1 = array1[j];
+					array1[j] = array1[i];
+					array1[i] = temp1;
+				}
+			}
+		}
+		System.out.println("The vowel counter and sorter:");
+		{
+			for(int t=0;t<array1.length;t++) //use to list the counter and array in order
+			{
+				System.out.println(array1[t] + "  "+ array2[t]);
+			}
+		}
+		
+	keyboard.close();
+	}
+
+}
