@@ -1,0 +1,81 @@
+import java.util.Scanner;
+public class SimpleRecursion {
+	public static void main(String[] args) {
+		countDown(500);
+		System.out.println(factorial(5));
+	}
+	public static void countDown(int i)
+	{
+		if(i < 0)
+			return;
+		System.out.println(i);
+		countDown(i-1);
+	}
+	public static int factorial(int number)
+	{
+		if(number <= 0)
+			return 1;
+		else
+			return number * factorial(number-1); 
+	}
+	public static int gcd(int a, int b)
+	{
+		if(b==0)
+			return a;
+		else 
+			return gcd(b,a%b);
+	}
+	public static int fibo(int number)
+	{
+		if(number == 1 || number == 2)
+			return 1;
+		else
+			return fibo(number-1) + fibo(number-2);
+	}
+}
+
+public class SierpinskisCarpet extends Canvas 
+//Canvas is type of thing to draw > use inheritance
+{
+	public static void main(String[] args) 
+	{
+		JFrame frame = new JFrame("Sierpinki's Carpet"); //to create a window need a frame
+		//frame acts as container holds various types of panels drawing > components
+		frame.setSize(900,900); //set the size of frame or window.
+		SierpinskisCarpet sp = new SierpinskisCarpet();
+		frame.add(sp);
+		frame.setVisible(true);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);//to dispose on the window
+		
+		
+	}
+	
+	public void paint(Graphics g)
+	//graphic g is initialized by the set of components and the frames through various call
+	//use graphics g to draw the carpet on Canvas
+	{
+		drawCarpet(0,0,this.getSize().height,g); //height and size is same
+	}
+	
+	public void drawCarpet(int x, int y, int side, Graphics g)
+	{
+		int sub = side/3;
+		g.fillRect(x+sub, y+sub, sub, sub);
+		if(sub >= 3) //pixels
+		{
+			//Top
+			drawCarpet(x,y,sub,g); //left
+			drawCarpet(x+sub,y,sub,g);//mid
+			drawCarpet(x+sub*2,y,sub,g);//left
+			
+			//Mid
+			drawCarpet(x,y+sub,sub,g);//left
+			drawCarpet(x+sub*2,y+sub,sub,g);//right
+			
+			//Bottom
+			drawCarpet(x,y+sub*2,sub,g); //left
+			drawCarpet(x+sub,y+sub*2,sub,g);//mid
+			drawCarpet(x+sub*2,y+sub*2,sub,g);//right
+		}
+	}
+}
