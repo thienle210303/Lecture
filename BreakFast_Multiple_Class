@@ -1,0 +1,367 @@
+public class Bread {
+	private String name;
+	private int calories;
+	private String type;
+	
+	public Bread()//Default constructor
+	{
+		this.name = "none";
+		this.calories = 50;
+		this.type = "Whole Grain";
+	}
+	public Bread(String aN, int aC, String aT)//Para constructor
+	{
+		this.setName(aN);
+		this.setCalories(aC);
+		this.setType(aT);
+	}
+	public String getName()//Accessors
+	{
+		return this.name;
+	}
+	public int getCalories()
+	{
+		return this.calories;
+	}
+	public String getType()
+	{
+		return this.type;
+	}
+	public void setName(String aN)
+	{
+		if(aN != null)
+			this.name = aN;
+		else
+			this.type = "none";
+	}
+	public void setCalories(int aC)
+	{
+		if (aC>=50 || aC<=250)
+			this.calories = aC;
+		else
+			this.calories = 50;
+	}
+	public void setType(String aT)
+	{
+		if(aT.equalsIgnoreCase("Honey Wheat")||aT.equalsIgnoreCase("White")||aT.equalsIgnoreCase("Whole Grain")||aT.equalsIgnoreCase("WHole Wheat")){
+			this.type = aT;
+		}
+		else this.type = "Whole Grain";
+	}
+	
+	public String toString() {
+		return "name: "+this.getName()+", type: "+this.getType()+", calories: "+this.getCalories()+".\n";
+	}
+	public boolean equals(Bread aB)
+	{
+		if(this.name.equalsIgnoreCase(aB.name)&&this.type.equalsIgnoreCase(aB.type)&&this.calories==aB.calories)
+		{
+			return true;
+		}
+		return false;
+	}
+}
+
+public class Jelly {
+	private String name;
+	private int calories;
+	private String type;
+	
+	public Jelly()
+	{
+		this.name = "none";
+		this.calories = 50;
+		this.type = "Grape";
+	}
+	public Jelly(String aN, int aC, String aT)
+	{
+		this.setName(aN);
+		this.setCalories(aC);
+		this.setType(aT);
+	}
+	public String getName()
+	{
+		return this.name;
+	}
+	public int getCalories()
+	{
+		return this.calories;
+	}
+	public String getType()
+	{
+		return this.type;
+	}
+	public void setName(String aN)
+	{
+		if(aN != null)
+			this.name = aN;
+		else
+			this.type = "Grape";
+	}
+	public void setCalories(int aC)
+	{
+		if (aC>=50 || aC<=200)
+			this.calories = aC;
+		else
+			this.calories = 50;
+	}
+	public void setType(String aT)
+	{
+		if(aT.equalsIgnoreCase("Apple")||aT.equalsIgnoreCase("Blackberry")||aT.equalsIgnoreCase("Blueberry")||aT.equalsIgnoreCase("Tomato")){
+			this.type = aT;
+		}
+		else this.type = "Grape";
+	}
+	
+	public String toString() {
+		return "name: "+this.getName()+", type: "+this.getType()+", calories: "+this.getCalories()+".\n";
+	}
+	public boolean equals(Jelly aJ)
+	{
+		if(this.name.equalsIgnoreCase(aJ.name)&&this.type.equalsIgnoreCase(aJ.type)&&this.calories==aJ.calories)
+		{
+			return true;
+		}
+		return false;
+	}
+}
+
+public class PeanutButter {
+	private String name;
+	private int Calories;
+	private boolean isCrunchy;
+	
+	public PeanutButter()
+	{
+		this.name = "none";
+		this.Calories = 100;
+		this.isCrunchy = false;
+	}
+	public PeanutButter(String aN, int aC, boolean aI)
+	{
+		this.setName(aN);
+		this.setCalories(aC);
+		this.setIsCrunchy(aI);
+	}
+	public String getName()
+	{
+		return this.name;
+	}
+	public int getCalories()
+	{
+		return this.Calories;
+	}
+	public boolean getIsCrunchy()
+	{
+		return this.isCrunchy;
+	}
+	public void setName(String aN)
+	{
+		if(aN != null)
+		{
+			this.name = aN;
+		}
+		else this.name = "none";
+	}
+	public void setCalories(int aC)
+	{
+		if(aC >=100 || aC<=300)
+		{
+			this.Calories = aC;
+		}
+		else this.Calories = 100;
+	}
+	public void setIsCrunchy(boolean aI)
+	{
+		if (aI = true)
+		{
+			this.isCrunchy = aI;
+		}
+		else this.isCrunchy = false;
+	}
+	public boolean equals(PeanutButter aP)
+	{
+		if(this.name.equalsIgnoreCase(aP.name)&& this.isCrunchy == aP.isCrunchy&&this.Calories==aP.Calories)
+		{
+			return true;
+		}
+		return false;
+	}
+	
+	public String toString()
+	{
+		return "name: "+this.getName()+", isCrunchy: "+this.getIsCrunchy()+", calories: "+this.getCalories()+".\n";
+	}
+}
+
+public class PBJSandwich {
+	private Bread topSlice;
+	private PeanutButter peanutButter;
+	private Jelly jelly;
+	private Bread botSlice;
+	
+	public PBJSandwich(){
+		this.topSlice = new Bread();
+		this.peanutButter = new PeanutButter();
+		this.jelly = new Jelly();
+		this.botSlice = new Bread();
+	}
+	public PBJSandwich(Bread aT, PeanutButter aP, Jelly aJ,  Bread aB) {
+		this.setTop(aT);
+		this.setPeanut(aP);
+		this.setJelly(aJ);
+		this.setBot(aB);
+	}
+	public Bread getTop()
+	{
+		return this.topSlice;
+	}
+	public Bread getBot()
+	{
+		return this.botSlice;
+	}
+	public PeanutButter getPeanut()
+	{
+		return this.peanutButter;
+	}
+	public Jelly getJelly()
+	{
+		return this.jelly;
+	}
+	public void setTop(Bread aB)
+	{
+		  this.topSlice = aB;
+	}
+	public void setBot(Bread aB)
+	{
+		this.botSlice =aB;
+	}
+	public void setPeanut(PeanutButter aP)
+	{
+		this.peanutButter = aP;
+	}
+	public void setJelly(Jelly aJ)
+	{
+		this.jelly = aJ;
+	}
+	public boolean equals(PBJSandwich aS)
+	{
+		return this.topSlice == aS.getTop() &&
+				this.peanutButter == aS.getPeanut() &&
+				this.jelly == aS.getJelly() &&
+				this.botSlice == aS.getBot();
+	}
+	public String toString()
+	{
+		return "[Sandwich] Top slice : "+this.topSlice+" Peanut Butter: "+this.peanutButter+" Jelly: "+this.jelly+" Bot slice: "+this.botSlice;
+	}
+}
+
+public static void main(String[] args) {
+		Scanner keyboard = new Scanner(System.in);
+		System.out.println("\nWelcome to the Sandwich program\n");
+		PBJSandwich s1 = new PBJSandwich();
+		PBJSandwich s2 = new PBJSandwich();
+		boolean playAgain = true;
+		while(playAgain) {
+			System.out.println("---Sandwich 1---");
+			input(s1);//user put input here
+			System.out.println("---Sandwich 2---");
+			input(s2);
+			System.out.println("---Sandwich 1---");
+			show(s1); //calling showing information
+			System.out.println("---Sandwich 2---");
+			show(s2);
+			System.out.println("-----Same sandwich?-----");
+			if(s1.equals(s2))
+			{
+				System.out.println("yes");
+			}
+			else
+				System.out.println("no");
+			System.out.println("Do you want play again? \"yes\" or \"no\"");
+			String input = keyboard.nextLine();
+			if(input.equalsIgnoreCase("yes"))
+			{
+				playAgain = true;//quit program
+			}
+			else
+			{
+				continue;//play again
+			}
+		}
+		System.out.println("Bye");
+		keyboard.close();//close Scanner
+	}
+  
+  
+	public static void input(PBJSandwich aS)
+	{
+		System.out.println("-----Top slice information-----");
+		Scanner keyboard = new Scanner(System.in);
+		
+		System.out.println("Enter the name of the bread");
+		String n1 = keyboard.nextLine();
+		System.out.println("Enter the amount of calories");
+		int i = keyboard.nextInt();
+		System.out.println("\"Honey Wheat\", \"White\", \"Whole Grain\", or \"Whole Wheat\"");
+		System.out.println("Enter type");
+		keyboard.nextLine();
+		String n2 = keyboard.nextLine();
+		aS.getTop().setName(n1);//
+		aS.getTop().setCalories(i);
+		aS.getTop().setType(n2);
+		System.out.println("-----Peanut Butter Information-----");
+		System.out.println("Enter name:");
+		String pName = keyboard.nextLine();
+		System.out.println("Enter the number of calories ");
+		int pCal = keyboard.nextInt();
+		System.out.println("Is it crunchy? Enter \"true\", or \"false\" ");
+		boolean yes = keyboard.nextBoolean();
+		aS.getPeanut().setName(pName);
+		aS.getPeanut().setCalories(pCal);
+		aS.getPeanut().setIsCrunchy(yes);
+		
+		System.out.println("-----Jelly information-----");
+		System.out.println("Enter name of the Jelly ");
+		String jName = keyboard.nextLine();
+		keyboard.nextLine();
+		System.out.println("Enter the number of calories ");
+		int jCalo = keyboard.nextInt();
+		keyboard.nextLine();
+		System.out.println("\"Apple\", \"Blueberry\", \"Grape\", \"Strawberry\", or \"Tomato\"");
+		System.out.println("Enter the type of Fruit.");
+		String jFruit = keyboard.nextLine();
+		aS.getJelly().setName(jName);
+		aS.getJelly().setCalories(jCalo);
+		aS.getJelly().setType(jFruit);
+		
+		System.out.println("-----Bottom Slice-----");
+		System.out.println("Enter name of the Bread ");
+		String b2Name = keyboard.nextLine();
+		System.out.println("Enter the number of calories ");
+		int cal2 = keyboard.nextInt();
+		System.out.println("\"Honey Wheat\", \"White\", \"Whole Grain\", or \"Whole Wheat\"");
+		System.out.println("Enter type");
+		keyboard.nextLine();
+		String b2Type = keyboard.nextLine();
+		aS.getBot().setName(b2Name);
+		aS.getBot().setCalories(cal2);
+		aS.getBot().setType(b2Type);
+		keyboard.close();//close Scanner
+	}
+	public static void show(PBJSandwich sandwich){
+		System.out.println("PBJ Sandwich");
+		System.out.println("Top Slice:");
+		System.out.println(sandwich.getTop().toString());
+		System.out.println("Peanut Butter:");
+		System.out.println(sandwich.getPeanut().toString());
+		System.out.println("Jelly");
+		System.out.println(sandwich.getJelly().toString());
+		System.out.println("Bottom Slice:");
+		System.out.println(sandwich.getBot().toString());
+		}
+	
+	}
+
+
