@@ -1,0 +1,285 @@
+public interface QueueI <T>{
+	public void enqueue(T aData);
+	public T dequeue();
+	public T peek();
+	public void print();
+}
+
+public class QueueLL<T> implements QueueI<T> {
+	private class ListNode
+	{
+		T data;
+		ListNode link;
+		public ListNode(T aData, ListNode aLink)
+		{
+			data = aData;
+			link = aLink;
+		}
+	}
+	
+	private ListNode head;
+	private ListNode tail;
+	public QueueLL()
+	{
+		head = tail = null;
+	}
+	public void enqueue(T aData) //add element
+	{
+		ListNode newNode = new ListNode(aData,null);
+		if(head == null)
+		{
+			head = tail = newNode;
+			return;
+		}
+		tail.link = newNode;
+		tail = tail.link;
+	}
+	public T dequeue() //remove a current elem and move to the next one
+	{
+		if(head == null)
+			return null;
+		T ret = head.data;
+		head = head.link;
+		return ret;
+	}
+	public T peek() //first elem of queue
+	{
+		if(head == null)
+			return null;
+		return head.data;
+	}
+	public void print() //print out data of queue
+	{
+		for(ListNode temp = head; temp != null; temp = temp.link)
+			System.out.println(temp.data);
+	}
+	public void reset()
+	{
+		head = tail = null;
+	}
+}
+
+import java.util.Scanner;
+import java.io.*;
+public class RobotSimulator {
+	public static final int SIZE = 10; //set the size of board game
+	public static char[][] board = new char[SIZE][SIZE];
+	
+	public static QueueI<String> command = new QueueLL<String>(); //store command in queue list
+	public static final Scanner keyboard = new Scanner(System.in);
+	
+	public static final char ROBOT = 'H'; //set some basic info of game
+	public static final char OBST = 'X';
+	public static final String SPACE = " ";
+	public static final char EMPTY = '_';
+	public static int currX = 0, currY = 0; //current place of robot
+	
+	public static void main(String[] args) {
+		greeting();
+		prompt();
+		boolean quit = false;
+		while(quit = true)
+		{
+			reset();
+			enterBoard();
+			enterCommand();
+			robotStart();
+			boolean play = true;
+			while(play == true)
+			{
+				if(checkMove(currX,currY)) //check the next move of robot before moving the robot
+				{
+					play = false;
+				}
+				else
+				{
+					move();
+					displayBoard();
+					if(done())
+						play = false;
+				}
+			}
+			System.out.println("Do you want to play again? Enter \"yes\" to play or else to quit");
+			String input = keyboard.nextLine();
+			if(input.equalsIgnoreCase("yes"))
+			{
+				quit = false;
+			}
+			else
+			{
+				break;
+			}
+		}
+		System.out.println("Bye!");
+	}
+	public static void reset()
+	{
+		command = new QueueLL<String>();
+		currX = 0; currY = 0;
+		board = new char[SIZE][SIZE];
+	}
+	public static void robotStart()
+	{
+		board[0][0] = ROBOT;
+	}
+	public static boolean checkMove(int tempX, int tempY)
+	//by create a future move of the robot before actually move
+	{
+		if(command.peek() != null)
+		{
+			if(command.peek().equalsIgnoreCase("up"))
+			{
+				tempY -= 1;
+			}
+			else if(command.peek().equalsIgnoreCase("down"))
+			{
+				tempY += 1;
+			}
+			else if(command.peek().equalsIgnoreCase("left"))
+			{
+				tempX -= 1;
+			}
+			else if(command.peek().equalsIgnoreCase("right"))
+			{
+				tempX += 1;
+			}
+			if(tempX < 0 || tempY < 0 || tempX>SIZE || tempY >SIZE
+					|| board[tempY][tempX] == OBST)
+			{
+				System.out.println();
+				System.out.println("!-!-!-!-!-Crash-!-!-!-!-!");
+				return true;
+			}
+		}
+		return false;
+	}
+	public static boolean done() //finish the queue command
+	{
+		if(command.peek() == null)
+		{
+			System.out.println("-----Completed-----");
+			return true;
+		}
+		return false;
+	}
+	public static void move() //moving the robot
+	{
+		if(command.peek() != null) {
+			board[currY][currX] = EMPTY;
+			if(command.peek().equalsIgnoreCase("up"))
+			{
+				currY -= 1;
+			}
+			else if(command.peek().equalsIgnoreCase("down"))
+			{
+				currY += 1;
+			}
+			else if(command.peek().equalsIgnoreCase("left"))
+			{
+				currX -= 1;
+			}
+			else if(command.peek().equalsIgnoreCase("right"))
+			{
+				currX += 1;
+			}
+			board[currY][currX] = ROBOT;
+			printMove();
+			command.dequeue();
+		}
+	
+	}
+	public static void displayBoard() //print out the board
+	{
+		for(int i =0; i<board.length;i++)
+		{
+			for(int j = 0; j<board[i].length;j++)
+			{
+				System.out.print(board[i][j]);
+			}
+			System.out.println();
+		}
+	}
+	public static void printMove() //print command move
+	{
+		System.out.println();
+		System.out.println("Command: "+command.peek());
+	}
+	public static void greeting()
+	{
+		System.out.println("---------------------------------------\n"
+						 + "Welcome to the Robot Simulator Program!\n"
+						 + "---------------------------------------");
+	}
+	public static void prompt()
+	{
+		System.out.println("Prompt: --T--\n"
+				+ "You will enter the name of board file with size 10 10\n"
+				+ "Then enter the name of command file\n"
+				+ "And Enjoy your game !!\n"
+				+ "------------------------------------------------------");
+	}
+	public static void enterBoard()
+	{
+		System.out.println("Enter the name of Board file:");
+		String input = keyboard.nextLine();
+		scanBoard(input+".txt");
+	}
+	public static void enterCommand()
+	{
+		System.out.println("Enter the name of Command file:");
+		String input = keyboard.nextLine();
+		scanCommand(input+".txt");
+	}
+	
+	public static void scanBoard(String aName)
+	{
+		try
+		{
+			Scanner fileScanner = new Scanner(new File(aName));
+			for(int i = 0; i < SIZE; i++) {
+				if(fileScanner.hasNextLine())
+				{
+					String fileLine = fileScanner.nextLine();
+					for(int j = 0; j < SIZE; j++)
+					{
+						board[i][j] = fileLine.charAt(j);
+					}
+					System.out.println(fileLine);
+				}
+			}
+			fileScanner.close();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+	public static void scanCommand(String aName)
+	{
+		try
+		{
+			Scanner fileScanner = new Scanner(new File(aName));
+			while(fileScanner.hasNextLine())
+			{
+				String fileLine = fileScanner.nextLine();
+				String[] splitLine = fileLine.split(" ");
+				String commandOnly = splitLine[1]; //take only command at index 1 ignore move at index  0
+				if((commandOnly.equalsIgnoreCase("up")
+							||commandOnly.equalsIgnoreCase("down")
+							||commandOnly.equalsIgnoreCase("left")
+							||commandOnly.equalsIgnoreCase("right"))
+							&&commandOnly != null
+							&&!commandOnly.isEmpty())
+				{
+						command.enqueue(commandOnly);
+				}
+			}
+			fileScanner.close();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+		
+}
