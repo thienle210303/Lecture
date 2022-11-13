@@ -1,0 +1,49 @@
+public interface SomeInterface extends Comparable <SomeInterface>{
+	public int getSomeValue();
+}
+
+public class SomeClass implements SomeInterface {
+	int value;
+	public int getSomeValue()
+	{
+		return this.value;
+	}
+	public int compareTo(SomeInterface c)
+	{
+		if(this.value < c.getSomeValue())
+			return -1;
+		else if(this.value > c.getSomeValue())
+			return 1;
+		else 
+			return 0;
+	}
+}
+
+public class Something implements Comparable<Something> {
+	public int somethingElse;
+	public String strSomething;
+
+	public Something(int aS, String str)
+	{
+		this.somethingElse = aS;
+		this.strSomething = str;
+	}
+	public int compareTo(Something o)
+	{
+		if(this.somethingElse < o.somethingElse)
+			return -1;
+		else if(this.somethingElse > o.somethingElse)
+			return 1;
+		else
+			return strSomething.compareTo(o.strSomething);
+	}
+}
+
+
+public class tester {
+	public static void main(String[] args) {
+	AVLTree<SomeInterface> avl = new AVLTree<SomeInterface>();
+	}
+}
+
+
