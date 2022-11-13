@@ -1,0 +1,716 @@
+public interface Shape extends Comparable<Shape> {
+	public String getType(); //connect 3 shape
+	public double getArea();
+}
+
+public class Circle implements Shape{
+	private final double PI = 3.14;
+	private String type;
+	private double rad;
+	private double area;
+	public Circle()
+	{
+		this.type = "Circle";
+		this.rad = 0;
+		this.area = 0;
+	}
+	public Circle(String aT, double aR)
+	{
+		setType(aT);
+		setRad(aR);
+		setArea(aR);
+	}
+	public String getType()
+	{
+		return this.type;
+	}
+	private void setType(String aT)
+	{
+		if(aT == null)
+			this.type = "None";
+		else 
+			this.type = "Circle";
+	}
+	public double getRad()
+	{
+		return this.rad;
+	}
+	public void setRad(double aR)
+	{
+		if(aR < 0)
+			this.rad = 0;
+		else 
+			this.rad = aR;
+	}
+	public double getArea()
+	{
+		return this.area;
+	}
+	private void setArea(double aR) {
+		if(aR < 0)
+			this.area = 0;
+		else
+			this.area = aR*aR*this.PI;
+	}
+	public String toString()
+	{
+		return this.type + "\t"+ this.rad;
+	}
+	public int compareTo(Shape aP)
+	{
+		if(aP == null)
+			return -1;
+		else if(this.area > aP.getArea())
+			return 1;
+		else if(this.area < aP.getArea())
+			return -1;
+		else
+			return this.type.compareTo(aP.getType());
+	}
+
+}
+
+public class Rectangle implements Shape {
+	private String type;
+	private double length;
+	private double width;
+	private double area;
+	public Rectangle() {
+		type = "Rectangle";
+		length = 0;
+		width = 0;
+	}
+	public Rectangle(String aT, double aL, double aW)
+	{
+		setType(aT);
+		setLength(aL);
+		setWidth(aW);
+		setArea(aL,aW);
+	}
+	
+	public String getType() {
+		return this.type;
+	}
+	public void setType(String aT) {
+		if(aT == null)
+			this.type = "None";
+		else 
+			this.type = "Rectangle";
+	}
+	public double getLength() {
+		return this.length;
+	}
+	public void setLength(double length) {
+		if(length < 0)
+			this.length = 0;
+		this.length = length;
+	}
+	public double getWidth() {
+		return this.width;
+	}
+	public void setWidth(double width) {
+		if(width < 0)
+			this.width = 0;
+		this.width = width;
+	}
+	public double getArea()
+	{
+		return this.area;
+	}
+	public void setArea(double aL, double aW)
+	{
+		if(aL < 0 || aW < 0)
+			this.area = 0;
+		else
+			this.area = aL*aW;
+	}
+	public String toString()
+	{
+		return this.type + "\t"+ this.length+ "\t"+ this.width;
+	}
+	public int compareTo(Shape aP) //compare area and type
+	{
+		if(aP == null)
+			return -1;
+		else if(this.area > aP.getArea())
+			return 1;
+		else if(this.area < aP.getArea())
+			return -1;
+		else
+			return this.type.compareTo(aP.getType());
+	}
+	
+	
+}
+
+public class RightTriangle implements Shape{
+	private String type;
+	private double base;
+	private double height;
+	private double area;
+	
+	public RightTriangle()
+	{
+		type = "Right Triangle";
+		base = 0;
+		height = 0;
+	}
+	public RightTriangle(String aT, double aB, double aH)
+	{
+		setType(aT);
+		setBase(aB);
+		setHeight(aH);
+		setArea(aB,aH);
+	}
+	public String getType()
+	{
+		return this.type;
+	}
+	private void setType(String aT)
+	{
+		if(aT == null)
+			this.type = "None";
+		else 
+			this.type = "Right Triangle";
+	}
+	public double getBase() {
+		return this.base;
+	}
+	private void setBase(double aB)
+	{
+		if(aB < 0)
+			this.base = 0;
+		else
+			this.base = aB;
+	}
+	public double getHeight()
+	{
+		return this.height;
+	}
+	private void setHeight(double aH)
+	{
+		if(aH < 0)
+			this.height = 0;
+		else
+			this.height = aH;
+	}
+	public double getArea()
+	{
+		return this.area;
+	}
+	private void setArea(double aH, double aB)
+	{
+		if(aH < 0 || aB < 0)
+			this.area = 0;
+		else
+			this.area = (aH*aB)/2;
+	}
+	public String toString()
+	{
+		return this.type + "\t"+ this.base+ "\t"+ this.height;
+	}
+	public int compareTo(Shape aP)
+	{
+		if(aP == null)
+			return -1;
+		else if(this.area > aP.getArea())
+			return 1;
+		else if(this.area < aP.getArea())
+			return -1;
+		else
+			return this.type.compareTo(aP.getType());
+	}
+}
+
+import java.io.*;
+
+//import java.io.*;
+//Nguyen Le csce146
+public class BST <T extends Comparable<Shape>>
+{
+	public static Shape[] T = new Shape[100];
+	public static int count = 0;
+	private class Node
+	{
+		Shape data;
+		Node leftChild;
+		Node rightChild;
+		public Node(Shape aData)
+		{
+			data = aData;
+			leftChild = rightChild = null;
+		}
+	}
+	private Node root;
+	public BST()
+	{
+		root = null;
+	}
+	public void add(Shape aData)
+	{
+		if(root == null)
+			root = new Node(aData);
+		else
+			add(root,aData);
+	}
+	private Node add(Node aNode, Shape aData)
+	{
+		if(aNode == null)
+			aNode = new Node(aData);
+		else if (aData.compareTo(aNode.data) < 0)
+			aNode.leftChild = add(aNode.leftChild, aData);
+		else if (aData.compareTo(aNode.data) > 0)
+			aNode.rightChild = add(aNode.rightChild, aData);
+		return aNode;
+	}
+	public void printPreOrder()
+	{
+		printPreOrder(root);
+	}
+	private void printPreOrder(Node aNode)
+	{
+		if(aNode == null)
+			return;
+		System.out.println(aNode.data);
+		printPreOrder(aNode.leftChild);
+		printPreOrder(aNode.rightChild);
+	}
+	
+	public void printInOrder()
+	{
+		printInOrder(root);
+	}
+	private void printInOrder(Node aNode)
+	{
+		if(aNode == null)
+			return;
+		printInOrder(aNode.leftChild);
+		System.out.println(aNode.data);
+		printInOrder(aNode.rightChild);
+	}
+	
+	public void printPostOrder()
+	{
+		printPostOrder(root);
+	}
+	private void printPostOrder(Node aNode)
+	{
+		if(aNode == null)
+			return;
+		printPostOrder(aNode.leftChild);
+		printPostOrder(aNode.rightChild);
+		System.out.println(aNode.data);
+	}
+	
+	public boolean search(Shape aData)
+	{
+		return search(root,aData);
+	}
+	
+	private boolean search(Node aNode, Shape aData)
+	{
+		if(aNode == null)
+			return false;
+		else if(aData.compareTo(aNode.data) < 0)
+			return search(aNode.leftChild, aData);
+		else if(aData.compareTo(aNode.data) > 0)
+			return search(aNode.rightChild, aData);
+		else 
+			return true;
+	}
+	public void remove(Shape aData)
+	{
+		root = remove(root, aData);
+	}
+	private Node remove(Node aNode, Shape aData)
+	{
+		if(aNode == null)
+			return null;
+		else if(aData.compareTo(aNode.data) < 0)
+			aNode.rightChild = remove(aNode.leftChild, aData);
+		else if(aData.compareTo(aNode.data) > 0)
+			aNode.rightChild = remove(aNode.rightChild, aData);
+		else
+		{
+			if(aNode.rightChild == null)
+				return aNode.leftChild;
+			else if(aNode.leftChild == null)
+				return aNode.rightChild;
+			Node temp = findMinInTree(aNode.rightChild);
+			aNode.data = temp.data;
+			aNode.rightChild = remove(aNode.rightChild, temp.data);
+		}
+		return aNode;
+	}
+	private Node findMinInTree(Node aNode)
+	{
+		if(aNode == null)
+			return null;
+		else if(aNode.leftChild == null)
+			return aNode;
+		else
+			return findMinInTree(aNode.leftChild);
+	}
+	public Node findMaxInTree()
+	{
+		return findMaxInTree(root);
+	}
+	private Node findMaxInTree(Node aNode)
+	{
+		if(aNode == null)
+			return null;
+		else if(aNode.rightChild == null)
+			return aNode;
+		else
+			return findMaxInTree(aNode.rightChild);
+	}
+	public void removeGreater(double aH)
+	{
+		root = removeGreater(root, aH);
+	}
+	private Node removeGreater(Node aNode, double aH)
+	{
+		if(aNode == null)
+			return null;
+		if(aNode.data.getArea() >= aH)
+			aNode = removeGreater(aNode.leftChild, aH);
+		else
+			aNode.rightChild = removeGreater(aNode.rightChild, aH);
+		return aNode;
+	}
+	public void go()
+	{
+		count = 0;
+		go(root);
+	}
+	private void go(Node aNode)
+	{
+		if(aNode == null)
+			return;
+		go(aNode.leftChild);
+		T[count] = aNode.data;
+		count++;
+		go(aNode.rightChild);
+	}
+	public void printFile(String aN)
+	{
+		go();
+		try {
+			PrintWriter fileWriter = new PrintWriter(new FileOutputStream(new File(aN+".txt")));
+			Shape[] temp = new Shape[T.length];
+			for(int i = 0; i<T.length;i++)
+			{
+				if(T[i] != null)
+					temp[i] = T[i];
+			}
+			for(int i = 0; i<temp.length;i++)
+			{
+				if(temp[i] != null)
+					fileWriter.println(temp[i]);
+			}
+			fileWriter.close();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
+}
+
+import java.util.*;
+import java.io.*;
+public class Main {
+	public static final String tempT = "Hello World!";
+	public static final Scanner keyboard = new Scanner(System.in);
+	public static BST<Shape> H = new BST<Shape>();
+	public static void main(String[] args) {
+		System.out.println("------------------------------");
+		System.out.println("Welcome to the Shape Tree 101!");
+		System.out.println("------------------------------");
+		H = new BST<Shape>(); //a tree
+		boolean start = true;
+		while(start == true)
+		{
+			prompt();
+			int input = keyboard.nextInt();
+			keyboard.nextLine();
+			switch(input) {
+				case 1:
+					System.out.println("------------------------------");
+					System.out.println("Option 1: Enter the file name:");
+					String file = keyboard.nextLine();
+					readFile(file+".txt");
+					break;
+				case 2:
+					System.out.println("------------------------------"); //chose a type to add
+					System.out.println("Option 2: Enter the shape type: (Rectangle, Circle, Right Triangle)");
+					String hType = keyboard.nextLine();
+					if(hType.equalsIgnoreCase("Rectangle"))
+						rectangleAdd();
+					else if(hType.equalsIgnoreCase("right triangle"))
+						rightTriangleAdd();
+					else if(hType.equalsIgnoreCase("circle"))
+						circleAdd();
+					else
+					{
+						System.out.println("Invalid input!");
+					}
+					break;
+				case 3:
+					System.out.println("------------------------------"); //chose a type to remove
+					System.out.println("Option 3: Enter the shape type: (Rectangle, Circle, Right Triangle)");
+					String hType0 = keyboard.nextLine();
+					if(hType0.equalsIgnoreCase("Rectangle"))
+						rectangleRemove();
+					else if(hType0.equalsIgnoreCase("right triangle"))
+						rightTriangleRemove();
+					else if(hType0.equalsIgnoreCase("circle"))
+						circleRemove();
+					else
+					{
+						System.out.println("Invalid input!");
+					}
+					break;
+				case 4:
+					System.out.println("------------------------------"); //chose a type to search
+					System.out.println("Option 4: Enter the shape type: (Rectangle, Circle, Right Triangle)");
+					String hType00 = keyboard.nextLine();
+					if(hType00.equalsIgnoreCase("Rectangle"))
+						rectangleSearch();
+					else if(hType00.equalsIgnoreCase("right triangle"))
+						rightTriangleSearch();
+					else if(hType00.equalsIgnoreCase("circle"))
+						circleSearch();
+					else
+					{
+						System.out.println("Invalid input!");
+					}
+					break;
+				case 5: //find maximum value
+					System.out.println("------------------------------");
+					System.out.println("Max area is: ");
+					H.findMaxInTree();
+					break;
+				case 6: //remove the greater value
+					System.out.println("------------------------------");
+					System.out.println("Enter the area:");
+					double inputArea = keyboard.nextDouble();
+					keyboard.nextLine();
+					if(inputArea < 0)
+					{
+						System.out.println("Invalid Input");
+						break;
+					}
+					H.removeGreater(inputArea);
+					break;
+				case 7:
+					System.out.println("------------------------------");
+					System.out.println("Option 7: Enter the file name:");
+					String file00 = keyboard.nextLine();					
+					H.printFile(file00);
+						
+				case 8: //print pre order
+					System.out.println("------------------------------");
+					System.out.println("-----------Loading------------");
+					H.printPreOrder();
+					break;
+				case 9: //print in order
+					System.out.println("------------------------------");
+					System.out.println("-----------Loading------------");
+					H.printInOrder();
+					break;
+				case 10: // print post order
+					System.out.println("------------------------------");
+					System.out.println("-----------Loading------------");
+					H.printPostOrder();
+					break;
+				case 11: //quit
+					 start = false;
+			}	
+		}
+		System.out.println("Bye");
+	}
+	public static void prompt()
+	{
+		System.out.println("------------------------------");
+		System.out.println("Enter these option following:"
+				+ "\n1)Enter the shape file name"
+				+ "\n2)Add a shape"
+				+ "\n3)Remove a shape"
+				+ "\n4)Search for a shape"
+				+ "\n5)Find the shape that has the maximum area"
+				+ "\n6)Enter the area to remove any shape that greater"
+				+ "\n7)Print out the shape file information"
+				+ "\n8)Print pre-order"
+				+ "\n9)Print in-order"
+				+ "\n10)Print post-order"
+				+ "\n11)!Exit!");
+	}
+	
+	public static void circleSearch()
+	{
+		System.out.println("------------------------------"
+						+"\n------------Circle------------");
+		System.out.println("Enter radius of the circle:");
+		double radius = keyboard.nextDouble();
+		keyboard.nextLine();
+		Shape temp = new Circle(tempT,radius);
+		if(H.search(temp))
+			System.out.println("Shape is avalable!");
+		else
+			System.out.println("Not Found!");
+	}
+	public static void rightTriangleSearch() 
+	{
+		System.out.println("------------------------------"
+				+"\n--------Right-Triangle--------");
+		System.out.println("Enter Base of the right triangle:");
+		double base = keyboard.nextDouble();
+		keyboard.nextLine();
+		System.out.println("Enter Height of the right triangle:");
+		double height = keyboard.nextDouble();
+		keyboard.nextLine();
+		Shape temp = new RightTriangle(tempT,base,height);
+		if(H.search(temp))
+			System.out.println("Shape is avalable!");
+		else
+			System.out.println("Not Found!");
+	}
+	
+	public static void rectangleSearch()
+	{
+		System.out.println("-------------------------------"
+				+"\n-----------Rectangle-----------");
+		System.out.println("Enter Length of the rectangle:");
+		double length = keyboard.nextDouble();
+		keyboard.nextLine();
+		System.out.println("Enter Width of the rectangle:");
+		double width = keyboard.nextDouble();
+		keyboard.nextLine();
+		Shape temp = new RightTriangle(tempT,length,width);
+		if(H.search(temp))
+			System.out.println("Shape is avalable!");
+		else
+			System.out.println("Not Found!");
+	}
+	
+	public static void circleRemove()
+	{
+		System.out.println("------------------------------"
+						+"\n------------Circle------------");
+		System.out.println("Enter radius of the circle:");
+		double radius = keyboard.nextDouble();
+		keyboard.nextLine();
+		Shape temp = new Circle(tempT,radius);
+		if(H.search(temp))
+			H.remove(temp);
+		else
+			System.out.println("Not Found!");
+	}
+	public static void rightTriangleRemove() 
+	{
+		System.out.println("------------------------------"
+				+"\n--------Right-Triangle--------");
+		System.out.println("Enter Base of the right triangle:");
+		double base = keyboard.nextDouble();
+		keyboard.nextLine();
+		System.out.println("Enter Height of the right triangle:");
+		double height = keyboard.nextDouble();
+		keyboard.nextLine();
+		Shape temp = new RightTriangle(tempT,base,height);
+		if(H.search(temp))
+			H.remove(temp);
+		else
+			System.out.println("Not Found!");
+	}
+	
+	public static void rectangleRemove()
+	{
+		System.out.println("-------------------------------"
+				+"\n-----------Rectangle-----------");
+		System.out.println("Enter Length of the rectangle:");
+		double length = keyboard.nextDouble();
+		keyboard.nextLine();
+		System.out.println("Enter Width of the rectangle:");
+		double width = keyboard.nextDouble();
+		keyboard.nextLine();
+		Shape temp = new RightTriangle(tempT,length,width);
+		if(H.search(temp))
+			H.remove(temp);
+		else
+			System.out.println("Not Found!");
+	}
+	
+	public static void circleAdd()
+	{
+		System.out.println("------------------------------"
+						+"\n------------Circle------------");
+		System.out.println("Enter radius of the circle:");
+		double radius = keyboard.nextDouble();
+		keyboard.nextLine();
+		H.add(new Circle(tempT,radius));
+	}
+	public static void rightTriangleAdd() 
+	{
+		System.out.println("------------------------------"
+						+"\n--------Right-Triangle--------");
+		System.out.println("Enter Base of the right triangle:");
+		double base = keyboard.nextDouble();
+		keyboard.nextLine();
+		System.out.println("Enter Height of the right triangle:");
+		double height = keyboard.nextDouble();
+		keyboard.nextLine();
+		H.add(new RightTriangle(tempT,base,height));
+	}
+	
+	public static void rectangleAdd() //add by specific type
+	{
+		System.out.println("-------------------------------"
+						+"\n-----------Rectangle-----------");
+		System.out.println("Enter Length of the rectangle:");
+		double length = keyboard.nextDouble();
+		keyboard.nextLine();
+		System.out.println("Enter Width of the rectangle:");
+		double width = keyboard.nextDouble();
+		keyboard.nextLine();
+		H.add(new Rectangle(tempT,length,width));
+	}
+	
+	public static void readFile(String aF)
+	{
+		try {
+			Scanner fileScanner = new Scanner(new File(aF));
+			while(fileScanner.hasNextLine())
+			{
+				String fileLine = fileScanner.nextLine();
+				String[] part = fileLine.split("\t");
+				String type = part[0];
+				if(type.equalsIgnoreCase("circle")) //add to the tree by specific type
+				{
+					double radius =  Double.parseDouble(part[1]);
+					H.add(new Circle(type,radius));
+				}
+				else if(type.equalsIgnoreCase("rectangle"))
+				{
+					double length = Double.parseDouble(part[1]);
+					double width = Double.parseDouble(part[2]);
+					H.add(new Rectangle(type,length,width));
+				}
+				else if(type.equalsIgnoreCase("right Triangle"))
+				{
+					double base = Double.parseDouble(part[1]);
+					double height =  Double.parseDouble(part[2]);
+					H.add(new RightTriangle(type,base,height));
+				}
+			}
+			fileScanner.close();
+		}
+		catch(Exception e) {
+			System.out.println("Invalid Input");
+			e.printStackTrace();
+		}
+	}
+}
+
+
