@@ -1,0 +1,35 @@
+import java.util.Scanner;
+public class Temperature {
+	
+	public static final int SIZE = 10; //size of array is 10 (constant)
+	public static void main(String[] args) {
+		Scanner keyboard = new Scanner(System.in);
+		System.out.println("Welcome to the above average temperature tester program");
+		double[] tempe = new double[SIZE];
+		double total = 0;
+		
+		for(int i=0; i<tempe.length; i++)
+		{
+			System.out.println("Enter the temperature for day "+ (i+1));
+			double newTempe = keyboard.nextDouble();
+			tempe[i] = newTempe; //put the user input into the array
+		}
+		
+		for(int i=0; i<tempe.length;i++)
+		{
+			total += tempe[i]; //find the total of the user input
+		}
+		double average = (total)/(tempe.length);
+		System.out.println("The average is "+average);
+		System.out.println("The days that were above average were ");
+		
+		for(int i=0;i<tempe.length;i++)
+		{
+			if (tempe[i]>average) //find the temperature above the average
+			{
+				System.out.println("Day "+(i+1)+" with "+ tempe[i]);
+			}
+		} 
+		keyboard.close(); //close Scanner
+}
+}
