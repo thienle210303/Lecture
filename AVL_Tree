@@ -1,0 +1,215 @@
+public class AVLTree <T extends Comparable<T>> {
+	//compareTo(Comparable) = int -1 0 1
+	//C++ strcmp
+	//red and black tree*
+	protected class Node
+	{
+		T data;
+		Node leftChild;
+		Node rightChild;
+		int height;
+		public Node(T aData)
+		{
+			data = aData;
+			leftChild = rightChild = null;
+		}
+	}
+	protected Node root;
+	public AVLTree()
+	{
+		root = null;
+	}
+	
+	protected void fixHeight(Node aN)
+	{
+		aN.height = 1 + Math.max(getHeight(aN.leftChild), getHeight(aN.rightChild));
+	}
+	protected int getHeight(Node aN)
+	{
+		if(aN == null)
+			return -1;
+		else 
+			return aN.height;
+	}
+	
+//  	 y                   x
+//      / \					/ \
+//      b  x				y  a
+//         /\              / \
+//        z  a		       b  z
+	protected Node rotateLeft(Node y)
+	{
+		Node x = y.rightChild;
+		Node z = x.leftChild;
+		x.leftChild = y;
+		y.rightChild = z;
+		fixHeight(y);
+		fixHeight(x);
+		return x;
+	}
+	
+	//      y				x
+	//      /\			    /\
+	//     x  b			   a  y
+	//    / \			      /\
+	//    a  z				 z  b
+	protected Node rotateRight(Node y)
+	{
+		Node x = y.leftChild;
+		Node z = x.rightChild;
+		x.rightChild = y;
+		y.leftChild = z;
+		fixHeight(y);
+		fixHeight(x);
+		return x;
+	}
+	protected int getBalance(Node aN)
+	{
+		if(aN == null)
+			return 0;
+		else return getHeight(aN.rightChild) - getHeight(aN.leftChild);
+	}
+	protected Node rebalance(Node aNode)
+	{
+		fixHeight(aNode);
+		int balance = getBalance(aNode);
+		
+		if(balance > 1) //unbalanced to the right 
+		{
+			if(getHeight(aNode.rightChild.rightChild) > getHeight(aNode.rightChild.leftChild))
+			{
+				//case right right
+				aNode = rotateLeft(aNode);
+			}
+			else
+			{
+				//case right left
+				aNode.rightChild = rotateRight(aNode.rightChild);
+				aNode = rotateLeft(aNode);
+			}
+		}
+		else if(balance < -1) //unbalance to the left
+		{
+			if(getHeight(aNode.leftChild.leftChild) > getHeight(aNode.leftChild.rightChild))
+			{
+				//case left left
+				aNode = rotateRight(aNode);
+			}
+			else
+			{
+				//case left right
+				aNode.rightChild = rotateLeft(aNode.rightChild);
+				aNode = rotateRight(aNode);
+			}
+		}
+		return rebalance(aNode);
+	}
+	public void add(T aData)
+	{
+		if(root == null)
+			root = new Node(aData);
+		else
+			add(root,aData);
+	}
+	private Node add(Node aNode,T aData)
+	{
+		if(aNode == null)
+			aNode = new Node(aData);
+		else if (aData.compareTo(aNode.data)<0)//go left
+			aNode.leftChild = add(aNode.leftChild,aData);
+		else if(aData.compareTo(aNode.data)>0)//go right
+			aNode.rightChild = add(aNode.rightChild,aData);
+		return rebalance(aNode);
+	}
+	public void printPreOrder()
+	{
+		printPreOrder(root);
+	}
+	private void printPreOrder(Node aNode)
+	{
+		if(aNode == null)
+			return;
+		System.out.println(aNode.data);//Process
+		printPreOrder(aNode.leftChild);//Left
+		printPreOrder(aNode.rightChild);
+	}
+	
+	public void printInOrder()
+	{
+		printInOrder(root);
+	}
+	private void printInOrder(Node aNode)
+	{
+		if(aNode == null)
+			return;
+		printInOrder(aNode.leftChild);
+		System.out.println(aNode.data);
+		printInOrder(aNode.rightChild);
+	}
+	
+	public void printPostOrder()
+	{
+		printPostOrder(root);
+	}
+	private void printPostOrder(Node aNode)
+	{
+		if(aNode == null)
+			return;
+		printPostOrder(aNode.leftChild);
+		printPostOrder(aNode.rightChild);
+		System.out.println(aNode.data);
+	}
+	
+	public boolean search(T aData)
+	{
+		return search(root,aData);
+	}
+	private boolean search(Node aNode, T aData)
+	{
+		if(aNode == null)
+			return false;
+		else if(aData.compareTo(aNode.data)<0)//left
+			return search(aNode.leftChild,aData);
+		else if(aData.compareTo(aNode.data)>0)//right
+			return search(aNode.rightChild,aData);
+		else
+			return true;
+	}
+	public void remove(T aData)
+	{
+		root = remove(root,aData);
+	}
+	private Node remove(Node aNode, T aData)
+	{
+		//Find the Node
+		if(aNode == null)
+			return null;
+		else if(aData.compareTo(aNode.data)<0)//left
+			aNode.leftChild = remove(aNode.leftChild,aData);
+		else if(aData.compareTo(aNode.data)>0)//right
+			aNode.rightChild = remove(aNode.rightChild,aData);
+		else //fouidn it DESTROY!
+		{
+			//case 0. casde 1/2 of case 1
+			if(aNode.rightChild == null)
+				return aNode.leftChild;
+			else if(aNode.leftChild == null) //other 1/2 of case 1
+				return aNode.rightChild;
+			//if reach here, case 2
+			//find the min in the right sub tree
+			Node temp = findMinInTree(aNode.rightChild);
+			aNode.data = temp.data;
+			aNode.rightChild = remove(aNode.rightChild,temp.data);
+		}
+		return rebalance(aNode);
+	}
+	private Node findMinInTree(Node aNode)
+	{
+		if(aNode == null)
+			return null;
+		else if(aNode.leftChild == null)
+			return aNode;
+		else
+			return findMinInTree(aNode.leftChild);
+	}
+}
