@@ -1,0 +1,26 @@
+import java.util.Scanner;
+public class Drawabox {
+
+	public static void main(String[] args) {
+		Scanner keyboard = new Scanner(System.in);
+		System.out.println("I can draw a box.\nGive me a length followed by a width, both are greater than 0");
+		
+		int length = keyboard.nextInt();
+		int width = keyboard.nextInt();
+		
+		if (length <=0 || width <=0)
+		{
+			System.out.println("That is invalid!");
+			System.exit(0);
+		}
+		for (int i=0; i<length; i++)
+		{
+			for(int j=0; j<width;j++)
+			{
+				System.out.print("*");
+			}
+			System.out.println();
+			// i and j does not exist
+		}
+	}
+}
