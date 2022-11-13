@@ -1,0 +1,135 @@
+import java.util.Scanner;
+
+public class VectorMathProgram {
+
+	public static void main(String[] args) {
+		Scanner keyboard = new Scanner(System.in);
+		boolean True = true;
+		while(True)
+		{
+			System.out.println("Please enter size of first vectors:");
+			int size1 = keyboard.nextInt();
+			keyboard.nextLine();
+			int[] one = new int[size1];
+			
+			System.out.println("Please enter size of second vectors:");
+			int size2 = keyboard.nextInt();
+			keyboard.nextLine();
+			int[] two = new int[size2];
+			
+			if(size1 != size2 || size1 <= 0) //check if both size is equal and one of these size > 0
+			{
+				System.out.println("Invalid --> ERROR!!!!\nPlease press \'y\' to enter again!");
+				String y = keyboard.nextLine();
+				if(y.equalsIgnoreCase("y"))
+					continue;
+				else
+					break;
+			}
+			
+			for(int i=0;i<one.length;i++) //let the user enter the value into the array
+			{
+				System.out.println("Please enter value of first vectors at index "+(i)+" ");
+				int value = keyboard.nextInt();
+				keyboard.nextLine();
+				one[i] = value;
+			}
+			for(int i=0;i<two.length;i++)
+			{
+				System.out.println("Please enter value of second vectors at index "+(i)+" ");
+				int value = keyboard.nextInt();
+				keyboard.nextLine();
+				two[i] = value;
+			}
+			System.out.println("Vector1"+"\tVector2");
+			for(int i=0;i<one.length;i++) //let the user enter the value into the array
+			{
+				System.out.print(one[i]+"\t");
+				System.out.print(two[i]);
+				System.out.println();
+			}
+			
+			System.out.println("Please enter number base on these option below"
+					+ "\n1)Adding vector"
+					+ "\n2)Subtracting vector"
+					+ "\n3)finding the magnitude of vector"
+					+ "\n4)Restart the program"
+					+ "\n5)Exit the program");
+			int enter = keyboard.nextInt();
+			keyboard.nextLine();
+			
+			if(enter == 1)
+			{
+				int[] total = new int[size1]; //create new sum array
+				for(int i = 0; i < total.length;i++)
+				{
+					total[i] = one[i] + two[i];
+				}
+				
+				System.out.println("Value of vector sum is: "); //print out new array
+				for(int value : total)
+				{
+					System.out.println(value);
+				}
+				System.out.println();
+				continue;
+			}
+			else if (enter == 2)
+			{
+				int[] minus = new int[size1];
+				for(int i = 0; i < minus.length;i++)
+				{
+					minus[i] = one[i] - two[i];
+				}
+				System.out.println("Value of vector subtraction is: ");
+				for(int value : minus)
+				{
+					System.out.println(value);
+				}
+				System.out.println();
+				continue;
+			}
+			else if (enter == 3)
+			{
+				int newLength = one.length + two.length;
+				int[] array = new int[newLength]; //create new array and let these 2 array above join into one array
+				int temp = 0;
+				for(int value : one)
+				{
+					array[temp] = value;
+					temp++;
+				}
+				
+				for(int value: two)
+				{
+					array[temp] = value;
+					temp++;
+				}
+				
+				int sumx2 = 0;
+				for(int value : array)
+				{
+					sumx2 += (value)*(value);
+				}
+				double x2 = sumx2;
+				System.out.println("Magnitude of the vector is: "+Math.sqrt(x2));
+				continue;
+			}
+			else if (enter == 4)
+			{
+				continue;
+			}
+			else if (enter == 5)
+			{
+				break;
+			}
+			else 
+			{
+				System.out.println("Invalid! Restart Program!");
+			}
+		}
+		System.out.println("Thank You!\n!!!ERROR!!!");
+		keyboard.close();
+	}
+
+}
