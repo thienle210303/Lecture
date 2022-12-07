@@ -1,0 +1,133 @@
+public class Vertex implements Comparable<Vertex> {
+	public double dist = Double.MAX_VALUE;
+	public Vertex prev = null;
+	public int x = 0;
+	public int y = 0;
+	public Vertex(int x, int y) 
+	{
+		this.x = x;
+		this.y = y;
+	}
+	
+	public int compareTo(Vertex v)
+	{
+		if(v == null)
+			return 0;
+		if(dist < v.dist)
+			return -1;
+		else if (dist > v.dist)
+			return 1;
+		else 
+			return 0;
+	}
+	
+	public String toString()
+	{
+		return x+" "+y+" "+dist;
+	}
+	public static double distance(Vertex v1, Vertex v2) //static only define one and can share
+	{
+		return Math.sqrt(Math.pow(v1.x-v2.x, 2) +Math.pow(v1.y-v2.y, 2));
+	}
+	
+}
+
+import java.util.*;
+public class AdjList {
+	private class Vertex
+	{
+		String name;
+		ArrayList<Edge> neightbors;
+		public Vertex(String aName)
+		{
+			name = aName;
+			neightbors = new ArrayList<Edge>();
+		}
+		
+	}
+	private class Edge
+	{
+		Vertex toVert;
+		double weight;
+		public Edge(Vertex aV, double aW)
+		{
+			toVert = aV;
+			weight = aW;
+		}
+	}
+	private Vertex origin;
+	private ArrayList<Vertex> vertices;
+	private ArrayList<Vertex> markedVerts;
+	private Queue<Vertex> vQ;
+	public AdjList()
+	{
+		origin = null;
+		vertices = new ArrayList<Vertex>();
+		markedVerts = new ArrayList<Vertex>();
+		vQ = new LinkedList<Vertex>();
+	}
+	public void addVertex(String aN)
+	{
+		if(vertContained(aN))
+			return; //already exist
+		Vertex v = new Vertex(aN);
+		if(origin == null)
+			origin = v;
+		
+	}
+	private boolean vertContained(String aN)
+	{
+		for(Vertex vert: vertices)
+			if(vert.name.equals(aN))
+				return true;
+		return false;
+	}
+	public void addEdge(String fromVert, String toVert, double weight)
+	{
+		Vertex v1 = getVert(fromVert);
+		Vertex v2 = getVert(toVert);
+		if(v1 == null || v2 == null)
+			return; //at least one vertices did not exist
+		v1.neightbors.add(new Edge(v2,weight));
+	}
+	private Vertex getVert(String aN)
+	{
+		for(Vertex vert: vertices)
+			if(vert.name.equals(aN))
+				return vert;
+		return null;
+	}
+	public void printDFS()
+	{
+		markedVerts.clear();
+		printDFS(origin);
+	}
+	private void printDFS(Vertex vert)
+	{
+		if(markedVerts.contains(vert))
+			return;
+		System.out.println(vert.name);
+		markedVerts.add(vert);
+		for(Edge e: vert.neightbors)
+			printDFS(e.toVert);
+	}
+	public void printBFS()
+	{
+		markedVerts.clear(); vQ.clear();
+		System.out.println(origin.name);
+		vQ.add(origin);
+		while(!vQ.isEmpty())
+		{
+			Vertex v = vQ.remove();
+			markedVerts.add(v);
+			for(Edge e: v.neightbors)
+			{
+				if(!vQ.contains(e.toVert) && !markedVerts.contains(e.toVert))
+				{
+					System.out.println(e.toVert.name);
+					vQ.add(e.toVert);
+				}
+			}
+		}
+	}
+}
