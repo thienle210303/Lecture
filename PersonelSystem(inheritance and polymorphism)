@@ -1,0 +1,133 @@
+public class Information {
+/*	We must keep track of important information about people at a university
+ * Different types include:
+ * -Undergraduate student: name, id, advisor
+ * -Graduate student: name, id, level
+ * -Faculty: name, salary, courses
+ * -Staff: name, salary, supervisor
+ * Should be able to:
+ * -add new people
+ * -remove people
+ * -view all people in the system
+ */
+}
+
+public class Person {
+	private String name;
+	public Person()
+	{
+		this.name = "none";
+	}
+	public Person(String aN)
+	{
+		this.setName(aN);
+	}
+	public String getName()
+	{
+		return this.name;
+	}
+	public void setName(String aN)
+	{
+		if(aN != null)
+			this.name = aN;
+		else 
+			this.name = "none";
+	}
+	public String toString()
+	{
+		return "Name: "+ this.name;
+	}
+	public boolean equals(Person aP)
+	{
+		return aP != null &&
+				this.name.equals(aP.getName());
+	}
+	
+}
+
+
+public class Student extends Person{
+	private int id;
+	public Student()
+	{
+		super();
+		this.id = 0;
+	}
+	public Student(String aN, int anID)
+	{
+		super(aN);//Person's para constructor
+		this.setID(anID);
+	}
+	public int getID() {
+		return this.id;
+	}
+	public void setID(int anID)
+	{
+		if(anID >= 0)
+			this.id = anID;
+		else
+			this.id = 0;
+	}
+	public String toString()
+	{
+		return super.toString()+ " ID: "+this.id;
+	}
+	public boolean equals(Student aS)
+	{
+		return aS != null &&
+				super.equals(aS) &&
+				this.id == aS.getID();
+	}
+}
+
+public class Upgrad extends Student{
+	private int level;
+	public Upgrad()
+	{
+		super();//student's default constructor
+		this.level = 1;
+	}
+	public Upgrad(String aN, int anID, int aL)
+	{
+		super(aN,anID);
+		this.setLevel(aL);
+	}
+	public int getLevel()
+	{
+		return this.level;
+	}
+	public void setLevel(int aL)
+	{
+		if(aL>=1 && aL<=4)
+			this.level = aL;
+		else
+			this.level = 1;
+	}
+	public String toString()
+	{
+		return super.toString()+" Level: "+this.level;
+	}
+	public boolean equals(Upgrad aU)
+	{
+		return aU != null &&
+				super.equals(aU) &&
+				this.level == aU.getLevel();
+	}
+	
+}
+
+public class Tester {
+
+	public static void main(String[] args) {
+		Person p = new Person();
+		Student s = new Student();
+		Upgrad u = new Upgrad();
+		
+		System.out.println(p);
+		System.out.println(s);
+		System.out.println(u);
+
+	}
+
+}
+
